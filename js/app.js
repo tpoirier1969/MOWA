@@ -1,304 +1,450 @@
 (() => {
   const qdata = window.MOWA_QUESTIONNAIRE;
   const config = window.MOWA_SURVEY_CONFIG || {};
-  const form = document.getElementById('surveyForm');
-  const tabs = document.getElementById('sectionTabs');
-  const container = document.getElementById('sectionContainer');
-  const saveStatus = document.getElementById('saveStatus');
-  const progressBar = document.getElementById('progressBar');
+  const introScreens = qdata.introScreens || [];
+  const pages = qdata.pages || [];
+  const introCount = introScreens.length;
+  const totalScreens = introCount + pages.length;
+  const draftKey = 'mowa-direction-survey-v4-draft';
+  const oldDraftKeys = ['mowa_direction_survey_draft_v3', 'mowa_direction_survey_draft_v2'];
+  const submissionsKey = 'mowa-direction-survey-v4-submissions';
+
+  const host = document.getElementById('screenHost');
+  const footerActions = document.getElementById('footerActions');
+  const pageCount = document.getElementById('pageCount');
   const progressText = document.getElementById('progressText');
-  const prevBtn = document.getElementById('prevSection');
-  const nextBtn = document.getElementById('nextSection');
-  const submitBtn = document.getElementById('submitSurvey');
-  const saveDraftBtn = document.getElementById('saveDraft');
-  const exportDraftBtn = document.getElementById('exportDraft');
-  const submitMessage = document.getElementById('submitMessage');
-  const draftKey = 'mowa_direction_survey_draft_v3';
-  const oldDraftKey = 'mowa_direction_survey_draft_v2';
-  const submissionsKey = 'mowa_direction_survey_submissions_v3';
-  const oldSubmissionsKey = 'mowa_direction_survey_submissions_v2';
-  let activeIndex = 0;
-  let activeQuestionIndex = 0;
+  const progressBar = document.getElementById('progressBar');
+  const sectionProgress = document.getElementById('sectionProgress');
+  const sectionTabs = document.getElementById('sectionTabs');
+  const saveStatus = document.getElementById('saveStatus');
+  const dialog = document.getElementById('messageDialog');
+  const dialogContent = document.getElementById('dialogContent');
+
+  let currentIndex = 0;
+  let moving = false;
   let draft = loadDraft();
 
   function loadDraft() {
     try {
-      return JSON.parse(localStorage.getItem(draftKey)) || JSON.parse(localStorage.getItem(oldDraftKey)) || {};
-    } catch {
-      return {};
-    }
-  }
-
-  function sectionQuestions(sectionIndex = activeIndex) {
-    return qdata.sections[sectionIndex].questions || [];
-  }
-
-  function allQuestions(includeNotes = false) {
-    return qdata.sections
-      .flatMap(section => section.questions || [])
-      .filter(q => includeNotes || q.type !== 'note');
-  }
-
-  function questionNumber(sectionIndex = activeIndex, questionIndex = activeQuestionIndex) {
-    let count = 0;
-    for (let i = 0; i < sectionIndex; i++) count += qdata.sections[i].questions.length;
-    return count + questionIndex + 1;
-  }
-
-  function questionTotal() {
-    return qdata.sections.reduce((sum, section) => sum + section.questions.length, 0);
-  }
-
-  function createTabs() {
-    tabs.innerHTML = '';
-    qdata.sections.forEach((section, index) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'section-tab';
-      const tabLabels = {
-        profile: 'About',
-        purpose: 'Should do',
-        expectations: 'Expectations',
-        delivery: 'Serving',
-        activities: 'Activities',
-        membership: 'Membership',
-        future: 'Future ideas',
-        involvement: 'Involvement',
-        tradeoffs: 'Preserve/improve',
-        missionfit: 'Mission fit',
-        final: 'Final'
-      };
-      button.textContent = `${index + 1}. ${tabLabels[section.id] || section.title}`;
-      button.setAttribute('aria-current', index === activeIndex ? 'step' : 'false');
-      button.addEventListener('click', () => {
-        saveDraft();
-        activeIndex = index;
-        activeQuestionIndex = 0;
-        renderQuestionPage();
-      });
-      tabs.appendChild(button);
-    });
+      const direct = localStorage.getItem(draftKey);
+      if (direct) return JSON.parse(direct) || {};
+      for (const key of oldDraftKeys) {
+        const raw = localStorage.getItem(key);
+        if (raw) return JSON.parse(raw) || {};
+      }
+    } catch (_) {}
+    return {};
   }
 
   function saveDraft(manual = false) {
-    draft = collectVisibleData();
+    collectVisibleData();
     localStorage.setItem(draftKey, JSON.stringify(draft));
-    const msg = manual ? 'Draft saved' : 'Draft autosaved';
-    saveStatus.textContent = `${msg} • ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+    saveStatus.textContent = manual
+      ? `Saved ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`
+      : 'Answers save in this browser';
     updateProgress();
   }
 
-  function navButton(label, direction, variant = 'secondary') {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = `button ${variant} compact-button`;
-    button.textContent = label;
-    button.addEventListener('click', () => direction === 'next' ? moveQuestion(1) : moveQuestion(-1));
-    if (direction === 'back' && isFirstQuestion()) button.disabled = true;
-    return button;
+  function allQuestions() {
+    return pages.flatMap(page => [
+      ...(page.items || []).map(item => ({ ...item, type: 'scale' })),
+      ...(page.fields || []).filter(field => field.type !== 'note')
+    ]);
   }
 
-  function questionNav(position = 'bottom') {
-    const wrap = document.createElement('div');
-    wrap.className = `question-nav question-nav-${position}`;
-    const status = document.createElement('span');
-    status.className = 'question-count';
-    status.textContent = `Question ${questionNumber()} of ${questionTotal()}`;
-    wrap.append(status, navButton('Back', 'back'));
-
-    if (isLastQuestion()) {
-      const submit = document.createElement('button');
-      submit.type = 'button';
-      submit.className = 'button primary compact-button';
-      submit.textContent = 'Submit response';
-      submit.addEventListener('click', () => form.requestSubmit());
-      wrap.append(submit);
-    } else {
-      wrap.append(navButton('Next', 'next', 'primary'));
-    }
-    return wrap;
-  }
-
-  function renderQuestionPage() {
-    const section = qdata.sections[activeIndex];
-    const questions = sectionQuestions();
-    const question = questions[activeQuestionIndex] || questions[0];
-    if (!question) return;
-
-    container.innerHTML = '';
-    const fieldset = document.createElement('fieldset');
-    fieldset.className = 'survey-section single-question';
-    fieldset.innerHTML = `
-      <legend><span>${escapeHtml(section.eyebrow)}</span>${escapeHtml(section.title)}</legend>
-      <p class="section-intro">${escapeHtml(section.intro)}</p>
-    `;
-    fieldset.appendChild(questionNav('top'));
-    fieldset.appendChild(renderQuestion(question));
-    fieldset.appendChild(questionNav('bottom'));
-    container.appendChild(fieldset);
-
-    prevBtn.disabled = isFirstQuestion();
-    nextBtn.classList.toggle('hidden', isLastQuestion());
-    submitBtn.classList.toggle('hidden', !isLastQuestion());
-    createTabs();
-    updateProgress();
-
-    const survey = document.getElementById('survey');
-    if (survey && window.scrollY > survey.offsetTop) {
-      window.scrollTo({ top: survey.offsetTop - 72, behavior: 'smooth' });
-    }
-  }
-
-  function renderQuestion(question) {
-    const wrapper = document.createElement('div');
-    wrapper.className = `question question-${question.type}`;
-
-    if (question.type === 'note') {
-      wrapper.innerHTML = `<div class="note-inline">${escapeHtml(question.label)}</div>`;
-      return wrapper;
-    }
-
-    const label = document.createElement('div');
-    label.className = 'question-label';
-    label.innerHTML = `${escapeHtml(question.label)}${question.required ? '<span class="required"> Required</span>' : ''}`;
-    wrapper.appendChild(label);
-
-    if (question.type === 'scale') {
-      wrapper.appendChild(renderScale(question));
-      return wrapper;
-    }
-
-    if (question.type === 'textarea') {
-      const textarea = document.createElement('textarea');
-      textarea.name = question.id;
-      textarea.rows = question.rows || 3;
-      textarea.value = draft[question.id] || '';
-      textarea.addEventListener('input', debounce(() => saveDraft(), 300));
-      wrapper.appendChild(textarea);
-      return wrapper;
-    }
-
-    if (question.type === 'text' || question.type === 'email') {
-      const input = document.createElement('input');
-      input.type = question.type === 'email' ? 'email' : 'text';
-      input.name = question.id;
-      input.value = draft[question.id] || '';
-      input.autocomplete = question.type === 'email' ? 'email' : 'off';
-      input.addEventListener('input', debounce(() => saveDraft(), 300));
-      wrapper.appendChild(input);
-      return wrapper;
-    }
-
-    const group = document.createElement('div');
-    group.className = 'choice-grid';
-    (question.options || []).forEach((option, idx) => {
-      const item = document.createElement('label');
-      item.className = 'choice';
-      const input = document.createElement('input');
-      input.type = question.type;
-      input.name = question.id;
-      input.value = option;
-      input.id = `${question.id}_${idx}`;
-      if (question.type === 'checkbox') {
-        const values = Array.isArray(draft[question.id]) ? draft[question.id] : [];
-        input.checked = values.includes(option);
-      } else {
-        input.checked = draft[question.id] === option;
-      }
-      input.addEventListener('change', () => saveDraft());
-      item.append(input, document.createTextNode(option));
-      group.appendChild(item);
-    });
-    wrapper.appendChild(group);
-    return wrapper;
-  }
-
-  function renderScale(question) {
-    const scale = document.createElement('div');
-    scale.className = 'scale-grid';
-    const labels = qdata.scaleLabels[question.scale] || qdata.scaleLabels.importance;
-    for (let i = 1; i <= 5; i++) {
-      const label = document.createElement('label');
-      label.className = 'scale-choice';
-      label.innerHTML = `<input type="radio" name="${question.id}" value="${i}" ${Number(draft[question.id]) === i ? 'checked' : ''}><span>${i}</span><small>${escapeHtml(labels[i - 1])}</small>`;
-      label.querySelector('input').addEventListener('change', () => saveDraft());
-      scale.appendChild(label);
-    }
-    if (question.na) {
-      const label = document.createElement('label');
-      label.className = 'scale-choice na-choice';
-      label.innerHTML = `<input type="radio" name="${question.id}" value="NA" ${draft[question.id] === 'NA' ? 'checked' : ''}><span>N/A</span><small>Not sure</small>`;
-      label.querySelector('input').addEventListener('change', () => saveDraft());
-      scale.appendChild(label);
-    }
-    return scale;
-  }
-
-  function collectVisibleData() {
-    const data = { ...draft };
-    const names = new Set(Array.from(container.querySelectorAll('input, textarea')).map(el => el.name).filter(Boolean));
-    names.forEach(name => {
-      const fields = Array.from(container.querySelectorAll(`[name="${cssEscape(name)}"]`));
-      if (!fields.length) return;
-      const first = fields[0];
-      if (first.type === 'checkbox') {
-        data[name] = fields.filter(el => el.checked).map(el => el.value);
-      } else if (first.type === 'radio') {
-        const checked = fields.find(el => el.checked);
-        if (checked) data[name] = checked.value === 'NA' ? 'NA' : coerceValue(checked.value);
-      } else {
-        data[name] = first.value.trim();
-      }
-    });
-    return data;
-  }
-
-  function cssEscape(value) {
-    if (window.CSS && CSS.escape) return CSS.escape(value);
-    return String(value).replace(/"/g, '\\"');
-  }
-
-  function coerceValue(value) {
-    const number = Number(value);
-    return Number.isFinite(number) && String(number) === String(value) ? number : value;
+  function answered(value) {
+    if (Array.isArray(value)) return value.length > 0;
+    return value !== undefined && value !== null && value !== '';
   }
 
   function updateProgress() {
-    const data = collectVisibleData();
-    const questions = allQuestions(false);
-    let answered = 0;
-    questions.forEach(q => {
-      const value = data[q.id];
-      if (Array.isArray(value) && value.length) answered++;
-      else if (value !== undefined && value !== null && value !== '') answered++;
-    });
-    const pct = questions.length ? Math.round((answered / questions.length) * 100) : 0;
+    const questions = allQuestions();
+    const done = questions.filter(question => answered(draft[question.id])).length;
+    const pct = questions.length ? Math.round((done / questions.length) * 100) : 0;
     progressBar.style.width = `${pct}%`;
-    progressText.textContent = `${pct}% complete`;
+    if (currentIndex >= introCount) {
+      progressText.textContent = `${pct}% answered`;
+    }
+  }
+
+  function currentSurveyPageIndex() {
+    return currentIndex - introCount;
+  }
+
+  function buildScreen(index) {
+    return index < introCount
+      ? buildIntroScreen(introScreens[index], index)
+      : buildSurveyScreen(pages[index - introCount], index - introCount);
+  }
+
+  function buildIntroScreen(screen, introIndex) {
+    const article = document.createElement('article');
+    article.className = `screen intro-screen ${introIndex === 0 ? 'welcome-screen' : 'how-screen'}`;
+    article.dataset.screen = screen.id;
+
+    if (introIndex === 0) {
+      article.innerHTML = `
+        <div class="welcome-grid">
+          <div class="welcome-copy">
+            <p class="kicker">${escapeHtml(screen.kicker)}</p>
+            <h1>${escapeHtml(screen.title)}</h1>
+            ${screen.body.map(p => `<p>${escapeHtml(p)}</p>`).join('')}
+            <div class="source-links">
+              ${screen.links.map(link => `<a href="${escapeAttribute(link.href)}" target="_blank" rel="noopener">${escapeHtml(link.label)} <span aria-hidden="true">↗</span></a>`).join('')}
+            </div>
+          </div>
+          <figure class="hero-image">
+            <img src="${escapeAttribute(screen.image)}" alt="${escapeAttribute(screen.imageAlt)}" />
+            <figcaption>Experience, new voices, and every form of outdoor storytelling.</figcaption>
+          </figure>
+        </div>`;
+    } else {
+      article.innerHTML = `
+        <div class="how-layout">
+          <div class="how-heading">
+            <p class="kicker">${escapeHtml(screen.kicker)}</p>
+            <h1>${escapeHtml(screen.title)}</h1>
+            <p class="how-summary">This is a direction-finding questionnaire, not a vote on a predetermined proposal.</p>
+          </div>
+          <div class="how-points">
+            ${screen.bullets.map((bullet, i) => `
+              <div class="how-point"><span>${String(i + 1).padStart(2, '0')}</span><p>${escapeHtml(bullet)}</p></div>`).join('')}
+          </div>
+          <p class="how-footer">${escapeHtml(screen.footer)}</p>
+        </div>`;
+    }
+    return article;
+  }
+
+  function buildSurveyScreen(page, pageIndex) {
+    const article = document.createElement('article');
+    article.className = 'screen survey-screen';
+    article.dataset.page = page.id;
+    article.innerHTML = `
+      <header class="page-heading">
+        <div>
+          <p class="kicker">${escapeHtml(sectionName(page.section))} <span>• ${escapeHtml(page.part || '')}</span></p>
+          <h1>${escapeHtml(page.title)}</h1>
+        </div>
+        <p>${escapeHtml(page.intro || '')}</p>
+      </header>
+      <div class="survey-content"></div>`;
+
+    const content = article.querySelector('.survey-content');
+    if (page.note) {
+      const note = document.createElement('p');
+      note.className = 'page-note';
+      note.textContent = page.note;
+      content.appendChild(note);
+    }
+    if (page.matrixScale && page.items?.length) {
+      content.appendChild(renderMatrix(page.matrixScale, page.items));
+    }
+    if (page.fields?.length) {
+      content.appendChild(renderFields(page.fields, page));
+    }
+
+    bindAutosave(article);
+    return article;
+  }
+
+  function renderMatrix(scaleName, items) {
+    const labels = qdata.scales[scaleName] || qdata.scales.importance;
+    const wrap = document.createElement('div');
+    wrap.className = 'matrix-wrap';
+    const key = document.createElement('div');
+    key.className = 'scale-key';
+    key.innerHTML = labels.map((label, index) => `<span><strong>${index + 1}</strong>${escapeHtml(label)}</span>`).join('');
+    wrap.appendChild(key);
+
+    const matrix = document.createElement('div');
+    matrix.className = 'rating-matrix';
+    items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'rating-row';
+      const statement = document.createElement('p');
+      statement.textContent = item.label;
+      const choices = document.createElement('div');
+      choices.className = 'rating-choices';
+      for (let value = 1; value <= 5; value++) {
+        const choice = document.createElement('label');
+        choice.className = 'score-choice';
+        choice.title = `${value} — ${labels[value - 1]}`;
+        choice.innerHTML = `
+          <input type="radio" name="${escapeAttribute(item.id)}" value="${value}" ${Number(draft[item.id]) === value ? 'checked' : ''}>
+          <span>${value}</span>`;
+        choices.appendChild(choice);
+      }
+      row.append(statement, choices);
+      matrix.appendChild(row);
+    });
+    wrap.appendChild(matrix);
+    return wrap;
+  }
+
+  function renderFields(fields, page) {
+    const wrap = document.createElement('div');
+    const mostlyTextareas = fields.filter(field => field.type === 'textarea').length >= 2;
+    wrap.className = mostlyTextareas ? 'field-grid text-grid' : 'field-grid';
+    if (page.section === 'about' || page.section === 'involvement') wrap.classList.add('compact-fields');
+
+    fields.forEach(field => {
+      const block = document.createElement('div');
+      block.className = `field field-${field.type}`;
+      if (field.type === 'checkbox' && field.options?.length > 8) block.classList.add('wide-field');
+      if (field.type === 'note') {
+        block.classList.add('page-note');
+        block.textContent = field.label;
+        wrap.appendChild(block);
+        return;
+      }
+
+      const label = document.createElement('div');
+      label.className = 'field-label';
+      label.innerHTML = `${escapeHtml(field.label)}${field.required ? '<span class="required">Required</span>' : ''}`;
+      block.appendChild(label);
+
+      if (field.type === 'textarea') {
+        const textarea = document.createElement('textarea');
+        textarea.name = field.id;
+        textarea.rows = field.rows || 2;
+        textarea.value = draft[field.id] || '';
+        block.appendChild(textarea);
+      } else if (field.type === 'text' || field.type === 'email') {
+        const input = document.createElement('input');
+        input.type = field.type;
+        input.name = field.id;
+        input.value = draft[field.id] || '';
+        input.autocomplete = field.type === 'email' ? 'email' : 'name';
+        block.appendChild(input);
+      } else {
+        const options = document.createElement('div');
+        options.className = `plain-options ${field.type === 'checkbox' ? 'checkbox-options' : 'radio-options'}`;
+        (field.options || []).forEach((option, index) => {
+          const item = document.createElement('label');
+          item.className = 'plain-choice';
+          const input = document.createElement('input');
+          input.type = field.type;
+          input.name = field.id;
+          input.value = option;
+          input.id = `${field.id}-${index}`;
+          input.checked = field.type === 'checkbox'
+            ? (Array.isArray(draft[field.id]) && draft[field.id].includes(option))
+            : draft[field.id] === option;
+          item.append(input, document.createTextNode(option));
+          options.appendChild(item);
+        });
+        block.appendChild(options);
+      }
+      wrap.appendChild(block);
+    });
+    return wrap;
+  }
+
+  function bindAutosave(scope) {
+    scope.querySelectorAll('input, textarea').forEach(control => {
+      const eventName = control.tagName === 'TEXTAREA' || control.type === 'text' || control.type === 'email' ? 'input' : 'change';
+      control.addEventListener(eventName, debounce(() => saveDraft(false), 220));
+    });
+  }
+
+  function collectVisibleData() {
+    const current = host.querySelector('.screen.current') || host.querySelector('.screen');
+    if (!current) return draft;
+    const names = new Set([...current.querySelectorAll('input[name], textarea[name]')].map(el => el.name));
+    names.forEach(name => {
+      const controls = [...current.querySelectorAll(`[name="${cssEscape(name)}"]`)];
+      if (!controls.length) return;
+      if (controls[0].type === 'checkbox') {
+        draft[name] = controls.filter(control => control.checked).map(control => control.value);
+      } else if (controls[0].type === 'radio') {
+        const selected = controls.find(control => control.checked);
+        if (selected) draft[name] = Number.isNaN(Number(selected.value)) ? selected.value : Number(selected.value);
+      } else {
+        draft[name] = controls[0].value.trim();
+      }
+    });
+    return draft;
+  }
+
+  function sectionName(id) {
+    return qdata.sectionOrder.find(section => section.id === id)?.short || id;
+  }
+
+  function buildSectionTabs(activePage) {
+    sectionTabs.innerHTML = '';
+    qdata.sectionOrder.forEach(section => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = section.short;
+      button.className = 'section-tab';
+      button.setAttribute('aria-current', activePage.section === section.id ? 'step' : 'false');
+      button.addEventListener('click', () => {
+        const target = pages.findIndex(page => page.section === section.id);
+        if (target >= 0) goTo(introCount + target, target + introCount > currentIndex ? 1 : -1);
+      });
+      sectionTabs.appendChild(button);
+    });
+  }
+
+  function updateChrome() {
+    footerActions.innerHTML = '';
+    const inSurvey = currentIndex >= introCount;
+    sectionProgress.hidden = !inSurvey;
+
+    if (!inSurvey) {
+      pageCount.textContent = `Page ${currentIndex + 1} of ${introCount}`;
+      progressText.textContent = currentIndex === 0 ? 'Introduction' : 'How it works';
+      if (currentIndex === 0) {
+        footerActions.append(
+          makeButton('Go straight to the questionnaire', 'secondary', () => goTo(introCount, 1)),
+          makeButton(introScreens[0].primaryLabel || 'Next', 'primary', () => goTo(1, 1))
+        );
+      } else {
+        footerActions.append(
+          makeButton('Back', 'secondary', () => goTo(0, -1)),
+          makeButton(introScreens[1].primaryLabel || 'Begin', 'primary', () => goTo(introCount, 1))
+        );
+      }
+      return;
+    }
+
+    const pageIndex = currentSurveyPageIndex();
+    const page = pages[pageIndex];
+    buildSectionTabs(page);
+    pageCount.textContent = `Questionnaire page ${pageIndex + 1} of ${pages.length}`;
+    updateProgress();
+
+    const backTarget = pageIndex === 0 ? introCount - 1 : currentIndex - 1;
+    footerActions.append(makeButton('Back', 'secondary', () => goTo(backTarget, -1)));
+    if (pageIndex === pages.length - 1) {
+      footerActions.append(makeButton('Submit response', 'primary', submitResponse));
+    } else {
+      footerActions.append(makeButton('Next', 'primary', () => goTo(currentIndex + 1, 1)));
+    }
+  }
+
+  function makeButton(label, style, handler) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `button ${style}`;
+    button.textContent = label;
+    button.addEventListener('click', handler);
+    return button;
+  }
+
+  function goTo(index, direction = 1) {
+    if (moving || index < 0 || index >= totalScreens || index === currentIndex) return;
+    collectVisibleData();
+    saveDraft(false);
+    moving = true;
+
+    const oldScreen = host.querySelector('.screen.current');
+    const nextScreen = buildScreen(index);
+    nextScreen.classList.add(direction > 0 ? 'from-right' : 'from-left');
+    host.appendChild(nextScreen);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        nextScreen.classList.add('current');
+        nextScreen.classList.remove('from-right', 'from-left');
+        if (oldScreen) oldScreen.classList.add(direction > 0 ? 'to-left' : 'to-right');
+      });
+    });
+
+    window.setTimeout(() => {
+      oldScreen?.remove();
+      currentIndex = index;
+      moving = false;
+      updateChrome();
+      const firstInput = nextScreen.querySelector('input, textarea');
+      if (firstInput && window.matchMedia('(prefers-reduced-motion: reduce)').matches) firstInput.focus({ preventScroll: true });
+    }, 410);
+  }
+
+  function initialRender() {
+    const screen = buildScreen(0);
+    screen.classList.add('current');
+    host.appendChild(screen);
+    updateChrome();
+    if (Object.keys(draft).length) saveStatus.textContent = 'A saved draft is available';
+  }
+
+  function validateRequired() {
+    const missing = allQuestions().find(question => question.required && !answered(draft[question.id]));
+    if (!missing) return true;
+    const pageIndex = pages.findIndex(page => (page.fields || []).some(field => field.id === missing.id));
+    showDialog(`<h2>One required answer is missing.</h2><p>${escapeHtml(missing.label)}</p>`);
+    if (pageIndex >= 0) goTo(introCount + pageIndex, -1);
+    return false;
   }
 
   function computeScores(payload) {
-    const gaps = qdata.gapPairs.map(pair => {
-      const importance = Number(payload[pair.importance]);
-      const performance = Number(payload[pair.performance]);
+    const pairs = [
+      ['Supporting writers', 'imp_writers', 'perf_writers'],
+      ['Supporting multimedia and digital communicators', 'imp_multimedia', 'perf_multimedia'],
+      ['Improving craft', 'imp_craft', 'perf_craft'],
+      ['Helping with opportunities and assignments', 'imp_opportunities', 'perf_opportunities'],
+      ['Providing networking', 'imp_networking', 'perf_networking'],
+      ['Mentoring newer communicators', 'imp_mentoring', 'perf_mentoring'],
+      ['Welcoming students and early-career creators', 'imp_students', 'perf_students'],
+      ['Welcoming women and broader voices', 'imp_women_broader', 'perf_women_broader'],
+      ['Promoting conservation and responsible recreation', 'imp_conservation', 'perf_conservation']
+    ];
+    const gaps = pairs.map(([label, importanceId, performanceId]) => {
+      const importance = Number(payload[importanceId]);
+      const performance = Number(payload[performanceId]);
       if (!Number.isFinite(importance) || !Number.isFinite(performance)) return null;
-      return { label: pair.label, importance, performance, gap: Number((importance - performance).toFixed(2)) };
+      return { label, importance, performance, gap: Number((importance - performance).toFixed(2)) };
     }).filter(Boolean).sort((a, b) => b.gap - a.gap);
     return { gaps };
   }
 
-  async function submitToSupabase(record) {
-    if (!config.supabaseUrl || !config.supabaseAnonKey || !window.supabase) return { skipped: true };
-    const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
-    const { error } = await client.from(config.tableName || 'mowa_direction_survey_responses').insert(record);
-    if (error) throw error;
-    return { skipped: false };
+  async function submitResponse() {
+    collectVisibleData();
+    saveDraft(true);
+    if (!validateRequired()) return;
+
+    const record = {
+      created_at: new Date().toISOString(),
+      survey_version: config.surveyVersion || 'mowa-direction-survey-v4',
+      respondent_type: draft.role || null,
+      member_duration: draft.mowa_years || null,
+      creator_types: Array.isArray(draft.creator_types) ? draft.creator_types : [],
+      age_range: draft.age_range || null,
+      gender: draft.gender || null,
+      contact_provided: Boolean(draft.contact_name || draft.contact_email),
+      payload: { ...draft },
+      scores: computeScores(draft),
+      source: 'github-pages-static-site'
+    };
+
+    let sentToSupabase = false;
+    try {
+      if (config.supabaseUrl && config.supabaseAnonKey && window.supabase) {
+        const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+        const { error } = await client.from(config.tableName || 'mowa_direction_survey_responses').insert(record);
+        if (error) throw error;
+        sentToSupabase = true;
+      }
+      const stored = JSON.parse(localStorage.getItem(submissionsKey) || '[]');
+      stored.push(record);
+      localStorage.setItem(submissionsKey, JSON.stringify(stored));
+      localStorage.removeItem(draftKey);
+      showDialog(`
+        <h2>Thank you. Your response has been saved.</h2>
+        <p>${sentToSupabase ? 'Your response was submitted successfully.' : 'Supabase is not configured in this review copy, so the response was saved only in this browser.'}</p>
+        <p>Contact information was optional and will only be present if you chose to provide it.</p>`);
+      saveStatus.textContent = 'Response saved';
+    } catch (error) {
+      showDialog(`<h2>The response could not be sent to Supabase.</h2><p>It remains saved in this browser.</p><p class="error-text">${escapeHtml(error.message || error)}</p>`);
+    }
   }
 
-  function saveLocalSubmission(record) {
-    const saved = JSON.parse(localStorage.getItem(submissionsKey) || localStorage.getItem(oldSubmissionsKey) || '[]');
-    saved.push(record);
-    localStorage.setItem(submissionsKey, JSON.stringify(saved));
+  function showDialog(html) {
+    dialogContent.innerHTML = html;
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
   }
 
   function downloadJson(filename, value) {
@@ -311,122 +457,36 @@
     URL.revokeObjectURL(url);
   }
 
-  function showSubmissionSummary(record, supabaseResult) {
-    const rows = record.scores.gaps.slice(0, 6).map(g => `<tr><td>${escapeHtml(g.label)}</td><td>${g.importance}</td><td>${g.performance}</td><td><strong>${g.gap}</strong></td></tr>`).join('');
-    submitMessage.hidden = false;
-    submitMessage.innerHTML = `
-      <h3>Response saved.</h3>
-      <p>${supabaseResult.skipped ? 'Saved locally in this browser. Supabase is not configured yet.' : 'Saved locally and sent to Supabase.'}</p>
-      <div class="table-wrap"><table><thead><tr><th>Largest personal gaps in this response</th><th>Importance</th><th>Delivery</th><th>Gap</th></tr></thead><tbody>${rows || '<tr><td colspan="4">No gap scores available yet.</td></tr>'}</tbody></table></div>
-      <p><a href="results.html">Open the results analyzer</a> to combine responses.</p>
-    `;
-    submitMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[char]));
   }
 
-  function escapeHtml(value) {
-    return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[char]));
+  function escapeAttribute(value) {
+    return escapeHtml(value);
+  }
+
+  function cssEscape(value) {
+    return window.CSS?.escape ? CSS.escape(value) : String(value).replace(/"/g, '\\"');
   }
 
   function debounce(fn, wait) {
     let timeout;
     return (...args) => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => fn.apply(null, args), wait);
+      timeout = setTimeout(() => fn(...args), wait);
     };
   }
 
-  function isFirstQuestion() {
-    return activeIndex === 0 && activeQuestionIndex === 0;
-  }
-
-  function isLastQuestion() {
-    return activeIndex === qdata.sections.length - 1 && activeQuestionIndex === sectionQuestions().length - 1;
-  }
-
-  function moveQuestion(delta) {
-    saveDraft();
-    let nextSection = activeIndex;
-    let nextQuestion = activeQuestionIndex + delta;
-    if (nextQuestion >= sectionQuestions(nextSection).length) {
-      nextSection = Math.min(qdata.sections.length - 1, nextSection + 1);
-      nextQuestion = 0;
-    } else if (nextQuestion < 0) {
-      nextSection = Math.max(0, nextSection - 1);
-      nextQuestion = sectionQuestions(nextSection).length - 1;
-    }
-    activeIndex = nextSection;
-    activeQuestionIndex = Math.max(0, Math.min(sectionQuestions().length - 1, nextQuestion));
-    renderQuestionPage();
-  }
-
-  function validateRequired(payload) {
-    const missing = allQuestions(false).filter(q => q.required).find(q => {
-      const value = payload[q.id];
-      return value === undefined || value === null || value === '' || (Array.isArray(value) && !value.length);
-    });
-    if (!missing) return true;
-    for (let s = 0; s < qdata.sections.length; s++) {
-      const qIndex = qdata.sections[s].questions.findIndex(q => q.id === missing.id);
-      if (qIndex !== -1) {
-        activeIndex = s;
-        activeQuestionIndex = qIndex;
-        renderQuestionPage();
-        submitMessage.hidden = false;
-        submitMessage.innerHTML = `<h3>One required question is missing.</h3><p>Please answer: ${escapeHtml(missing.label)}</p>`;
-        return false;
-      }
-    }
-    return false;
-  }
-
-  prevBtn.addEventListener('click', () => moveQuestion(-1));
-  nextBtn.addEventListener('click', () => moveQuestion(1));
-  saveDraftBtn.addEventListener('click', () => saveDraft(true));
-
-  exportDraftBtn.addEventListener('click', () => {
-    saveDraft(true);
-    downloadJson(`mowa-survey-draft-${new Date().toISOString().slice(0,10)}.json`, collectVisibleData());
-  });
-
-  form.addEventListener('submit', async event => {
+  document.getElementById('homeLink').addEventListener('click', event => {
     event.preventDefault();
-    saveDraft(true);
-    const payload = collectVisibleData();
-    if (!validateRequired(payload)) return;
-    const record = {
-      created_at: new Date().toISOString(),
-      survey_version: config.surveyVersion || 'mowa-direction-survey-v3',
-      respondent_type: payload.role || null,
-      member_duration: payload.mowa_years || null,
-      creator_types: Array.isArray(payload.creator_types) ? payload.creator_types : [],
-      age_range: payload.age_range || null,
-      gender: payload.gender || null,
-      contact_provided: Boolean(payload.contact_name || payload.contact_email),
-      payload,
-      scores: computeScores(payload),
-      source: 'github-pages-static-site'
-    };
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting…';
-    let result = { skipped: true };
-    try {
-      result = await submitToSupabase(record);
-      saveLocalSubmission(record);
-      localStorage.removeItem(draftKey);
-      localStorage.removeItem(oldDraftKey);
-      draft = {};
-      showSubmissionSummary(record, result);
-      saveStatus.textContent = 'Submitted';
-    } catch (error) {
-      saveLocalSubmission(record);
-      submitMessage.hidden = false;
-      submitMessage.innerHTML = `<h3>Saved locally, but Supabase rejected the insert.</h3><p>${escapeHtml(error.message || error)}</p><p>You can still export from the analyzer. Check config.js, schema.sql, and RLS policies.</p>`;
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit response';
-    }
+    if (currentIndex !== 0) goTo(0, -1);
   });
+  document.getElementById('saveDraft').addEventListener('click', () => saveDraft(true));
+  document.getElementById('exportDraft').addEventListener('click', () => {
+    saveDraft(true);
+    downloadJson(`mowa-questionnaire-draft-${new Date().toISOString().slice(0, 10)}.json`, draft);
+  });
+  document.getElementById('closeDialog').addEventListener('click', () => dialog.close());
 
-  renderQuestionPage();
-  if (Object.keys(draft).length) saveStatus.textContent = 'Draft restored from this browser';
+  initialRender();
 })();

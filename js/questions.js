@@ -1,220 +1,315 @@
 window.MOWA_QUESTIONNAIRE = {
-  scaleLabels: {
-    importance: ["Not important", "Slight", "Moderate", "Very", "Essential"],
-    performance: ["Poor", "Weak", "Adequate", "Good", "Excellent"],
-    value: ["Not valuable", "Slight", "Moderate", "Very", "Essential"],
-    expectation: ["Not at all", "A little", "Partly", "Mostly", "Fully"],
-    urgency: ["Not urgent", "Slight", "Moderate", "Very", "Critical"],
-    concern: ["Not concerned", "Slight", "Moderate", "Very", "Extreme"],
-    fit: ["Not much", "A little", "Somewhat", "Well", "Very well"]
+  scales: {
+    expectation: ["Not at all", "A little", "Somewhat", "Quite a bit", "Very much"],
+    importance: ["Not important", "A little", "Somewhat", "Very", "Essential"],
+    performance: ["Poorly", "Weakly", "Adequately", "Well", "Very well"],
+    value: ["Not valuable", "A little", "Somewhat", "Very", "Essential"],
+    readiness: ["Strongly disagree", "Disagree", "Mixed", "Agree", "Strongly agree"]
   },
-  sections: [
+  sectionOrder: [
+    { id: "about", short: "About you" },
+    { id: "experience", short: "Your experience" },
+    { id: "purpose", short: "What MOWA should do" },
+    { id: "delivery", short: "How MOWA is doing" },
+    { id: "activities", short: "Activities" },
+    { id: "awards", short: "Awards" },
+    { id: "future", short: "Future ideas" },
+    { id: "involvement", short: "Involvement" },
+    { id: "final", short: "Final thoughts" }
+  ],
+  introScreens: [
     {
-      id: "profile",
-      eyebrow: "Part 1",
+      id: "welcome",
+      title: "Help shape MOWA’s next chapter.",
+      kicker: "Member & board direction questionnaire",
+      body: [
+        "The Michigan Outdoor Writers Association describes itself as a group of professional outdoor communicators that supports networking, communication skills, career growth, all forms of communication, and the next generation of outdoor media professionals.",
+        "MOWA’s public About page also says its bylaws and principles include supporting conservation of Michigan’s natural resources and good sportsmanship in outdoor recreation."
+      ],
+      links: [
+        { label: "Read MOWA’s public bylaws and principles summary", href: "https://miowa.net/about-us/" },
+        { label: "Visit the MOWA website", href: "https://miowa.net/" }
+      ],
+      image: "assets/mentorship-hero.png",
+      imageAlt: "Multiple generations of outdoor communicators learning together in a rustic lakeside setting, using a typewriter, notebook, camera, laptop, and smartphone.",
+      primaryLabel: "How this works",
+      secondaryLabel: "Go straight to the questionnaire"
+    },
+    {
+      id: "how-it-works",
+      title: "Why this questionnaire is being done",
+      kicker: "How it works",
+      bullets: [
+        "It asks what people expected from MOWA before asking how well MOWA is delivering.",
+        "It looks at MOWA’s activities, awards, membership experience, communication, and possible future directions.",
+        "It gives members a chance to say where MOWA has been useful, where it could do more, and whether they want to get involved.",
+        "Most pages use simple 1–5 ratings. Contact information is optional and is only for follow-up or volunteer interest."
+      ],
+      footer: "Results can be summarized for discussion without making the questionnaire feel loaded or accusatory.",
+      primaryLabel: "Begin the questionnaire"
+    }
+  ],
+  pages: [
+    {
+      id: "about-1",
+      section: "about",
+      part: "1 of 2",
       title: "About you",
-      intro: "These questions help compare board, member, apprentice, supporter, and prospective-member perspectives.",
-      questions: [
-        { id: "role", type: "radio", required: true, label: "What is your relationship to MOWA?", options: ["Board member", "Active member", "Apprentice member", "Supporting member", "Past member", "Prospective member", "Other"] },
+      intro: "These questions help separate board, longtime member, newer member, student, supporter, and prospective-member perspectives.",
+      fields: [
+        { id: "role", type: "radio", required: true, label: "Which best describes your relationship to MOWA?", options: ["Board member", "Active member", "Apprentice member", "Supporting member", "Past member", "Prospective member", "Other"] },
         { id: "mowa_years", type: "radio", label: "How long have you been involved with MOWA?", options: ["Less than 1 year", "1–3 years", "4–10 years", "11–20 years", "More than 20 years", "Not involved yet"] },
-        { id: "creator_types", type: "checkbox", label: "What types of outdoor communication do you do? Select all that apply.", options: ["Writing / journalism", "Photography", "Video / filmmaking", "Podcasting / audio", "Radio / television", "Blogging / websites", "Social media / digital content", "Books", "Public relations / communications", "Conservation / nonprofit communication", "Tourism / destination communication", "Outdoor education", "I do not produce outdoor communication", "Other"] },
-        { id: "work_status", type: "radio", label: "Which best describes your outdoor communication work?", options: ["Full-time paid work", "Part-time paid work", "Occasional paid work", "Volunteer / unpaid but serious work", "Student / emerging communicator", "Retired from active outdoor communication", "Supporter, but not a creator"] },
+        { id: "work_status", type: "radio", label: "Which best describes your outdoor communication work?", options: ["Full-time paid work", "Part-time paid work", "Occasional paid work", "Volunteer / unpaid but serious work", "Student / emerging communicator", "Retired from active outdoor communication", "Supporter, but not a creator"] }
+      ]
+    },
+    {
+      id: "about-2",
+      section: "about",
+      part: "2 of 2",
+      title: "About you",
+      intro: "Communication format and demographic questions help show whether different groups have different experiences or priorities.",
+      fields: [
+        { id: "creator_types", type: "checkbox", label: "Which kinds of outdoor communication do you do? Select all that apply.", options: ["Writing / journalism", "Photography", "Video / filmmaking", "Podcasting / audio", "Radio / television", "Blogging / websites", "Social media / digital content", "Books", "Public relations / communications", "Conservation / nonprofit communication", "Tourism / destination communication", "Outdoor education", "I do not produce outdoor communication", "Other"] },
         { id: "age_range", type: "radio", label: "Optional: What age range are you in?", options: ["Under 25", "25–34", "35–44", "45–54", "55–64", "65–74", "75+", "Prefer not to answer"] },
         { id: "gender", type: "radio", label: "Optional: How do you describe your gender?", options: ["Woman", "Man", "Nonbinary", "Prefer to self-describe", "Prefer not to answer"] }
       ]
     },
     {
-      id: "purpose",
-      eyebrow: "Part 2",
+      id: "experience-1",
+      section: "experience",
+      part: "1 of 2",
+      title: "Your MOWA experience",
+      intro: "Please rate how well the following statements match your own experience with MOWA.",
+      matrixScale: "expectation",
+      items: [
+        { id: "expectations_met", label: "MOWA has met the expectations I had when I joined, or when I first became interested." },
+        { id: "expected_connections", label: "MOWA has helped me feel connected to other outdoor communicators." },
+        { id: "expected_growth", label: "MOWA has helped me grow professionally, creatively, or personally." },
+        { id: "expected_useful_activities", label: "MOWA has offered activities or opportunities that matter to me." },
+        { id: "expected_more_needed", label: "There are additional things I would like MOWA to offer or do." }
+      ]
+    },
+    {
+      id: "experience-2",
+      section: "experience",
+      part: "2 of 2",
+      title: "Your MOWA experience",
+      intro: "These short written answers help explain the ratings.",
+      fields: [
+        { id: "join_expectations", type: "textarea", rows: 2, label: "When you joined MOWA, or when you first considered joining, what did you hope MOWA would do for you?" },
+        { id: "expectations_best_met", type: "textarea", rows: 2, label: "Where has MOWA been most useful to you?" },
+        { id: "expectations_shortfall", type: "textarea", rows: 2, label: "Where has MOWA fallen short of what you hoped for?" },
+        { id: "more_for_members", type: "textarea", rows: 2, label: "Is there more MOWA should be doing for you or for members like you?" }
+      ]
+    },
+    {
+      id: "purpose-1",
+      section: "purpose",
+      part: "1 of 3",
       title: "What should MOWA do?",
-      intro: "Rate how important each role should be. This establishes expectations before asking how well MOWA is delivering.",
-      questions: [
-        { id: "imp_writers", type: "scale", scale: "importance", label: "Support professional outdoor writers." },
-        { id: "imp_multimedia", type: "scale", scale: "importance", label: "Support photographers, videographers, podcasters, website creators, social media creators, and other outdoor media professionals." },
-        { id: "imp_craft", type: "scale", scale: "importance", label: "Help members improve their craft." },
-        { id: "imp_opportunities", type: "scale", scale: "importance", label: "Help members find professional opportunities, contacts, assignments, or collaborations." },
-        { id: "imp_networking", type: "scale", scale: "importance", label: "Provide networking among members, editors, agencies, outdoor organizations, brands, and conservation groups." },
-        { id: "imp_mentoring", type: "scale", scale: "importance", label: "Mentor younger or newer outdoor communicators." },
-        { id: "imp_students", type: "scale", scale: "importance", label: "Welcome students and early-career creators." },
-        { id: "imp_women_broader", type: "scale", scale: "importance", label: "Welcome more women and a broader range of outdoor voices." },
-        { id: "imp_conservation", type: "scale", scale: "importance", label: "Promote conservation, natural resources, clean water, and responsible outdoor recreation." },
-        { id: "imp_heritage", type: "scale", scale: "importance", label: "Preserve MOWA history, traditions, memorials, awards, and legacy." },
-        { id: "purpose_today", type: "textarea", label: "In one sentence, what do you believe MOWA’s main purpose should be?" },
-        { id: "must_not_lose", type: "textarea", label: "In one sentence, what should MOWA make sure it does not lose?" }
+      intro: "Please rate how important each role should be for MOWA.",
+      matrixScale: "importance",
+      items: [
+        { id: "imp_writers", label: "It should support professional outdoor writers." },
+        { id: "imp_multimedia", label: "It should support photographers, videographers, podcasters, website creators, social media creators, and other outdoor media professionals." },
+        { id: "imp_craft", label: "It should help members improve their craft." },
+        { id: "imp_opportunities", label: "It should help members find professional opportunities, contacts, assignments, or collaborations." },
+        { id: "imp_networking", label: "It should provide networking among members, editors, agencies, outdoor organizations, brands, and conservation groups." }
       ]
     },
     {
-      id: "expectations",
-      eyebrow: "Part 3",
-      title: "Your expectations and experience",
-      intro: "This section asks whether MOWA has delivered what members hoped for when they joined or first became interested.",
-      questions: [
-        { id: "join_expectations", type: "textarea", label: "When you joined MOWA, or when you first considered joining, what did you hope MOWA would do for you?" },
-        { id: "expectations_met", type: "scale", scale: "expectation", na: true, label: "How well has MOWA met those expectations?" },
-        { id: "expectations_best_met", type: "textarea", label: "Which expectations has MOWA met best?" },
-        { id: "expectations_shortfall", type: "textarea", label: "Where has MOWA fallen short of what you hoped for?" },
-        { id: "more_for_members", type: "textarea", label: "Is there more MOWA should be doing for you or for members like you?" },
-        { id: "member_value", type: "scale", scale: "performance", na: true, label: "Overall, how valuable has MOWA been to you personally?" }
+      id: "purpose-2",
+      section: "purpose",
+      part: "2 of 3",
+      title: "What should MOWA do?",
+      intro: "Please continue rating how important each role should be for MOWA.",
+      matrixScale: "importance",
+      items: [
+        { id: "imp_mentoring", label: "It should mentor younger or newer outdoor communicators." },
+        { id: "imp_students", label: "It should welcome students and early-career creators." },
+        { id: "imp_women_broader", label: "It should welcome more women and a broader range of outdoor voices." },
+        { id: "imp_conservation", label: "It should promote conservation, natural resources, clean water, and responsible outdoor recreation." },
+        { id: "imp_heritage", label: "It should preserve MOWA history, traditions, memorials, awards, and legacy." }
       ]
     },
     {
-      id: "delivery",
-      eyebrow: "Part 4",
-      title: "How well is MOWA serving members?",
-      intro: "Rate how well MOWA is delivering in each area. The most useful findings come from comparing these scores with the expectation scores.",
-      questions: [
-        { id: "perf_writers", type: "scale", scale: "performance", na: true, label: "Supporting outdoor writers." },
-        { id: "perf_multimedia", type: "scale", scale: "performance", na: true, label: "Supporting photographers, videographers, podcasters, websites, digital creators, and other nontraditional outdoor communicators." },
-        { id: "perf_craft", type: "scale", scale: "performance", na: true, label: "Helping members improve their craft." },
-        { id: "perf_opportunities", type: "scale", scale: "performance", na: true, label: "Helping members find opportunities, contacts, assignments, or collaborations." },
-        { id: "perf_networking", type: "scale", scale: "performance", na: true, label: "Providing valuable networking." },
-        { id: "perf_mentoring", type: "scale", scale: "performance", na: true, label: "Mentoring younger or newer communicators." },
-        { id: "perf_students", type: "scale", scale: "performance", na: true, label: "Welcoming students and early-career creators." },
-        { id: "perf_women_broader", type: "scale", scale: "performance", na: true, label: "Welcoming women and a broader range of outdoor voices." },
-        { id: "perf_conservation", type: "scale", scale: "performance", na: true, label: "Promoting conservation, natural resources, clean water, and responsible outdoor recreation." },
-        { id: "does_well", type: "textarea", label: "What is MOWA doing well?" },
-        { id: "not_well", type: "textarea", label: "What is MOWA not doing well enough?" }
+      id: "purpose-3",
+      section: "purpose",
+      part: "3 of 3",
+      title: "What should MOWA do?",
+      intro: "These answers help identify MOWA’s central purpose and what members most want preserved.",
+      fields: [
+        { id: "purpose_today", type: "textarea", rows: 3, label: "In one or two sentences, what do you believe MOWA’s main purpose should be today?" },
+        { id: "must_not_lose", type: "textarea", rows: 3, label: "In one or two sentences, what should MOWA make sure it does not lose?" }
       ]
     },
     {
-      id: "activities",
-      eyebrow: "Part 5",
-      title: "Activities, awards, and programs",
-      intro: "This section looks at major MOWA activities and asks whether they serve what members care about.",
-      questions: [
-        { id: "conference_importance", type: "scale", scale: "importance", label: "Importance of the annual conference." },
-        { id: "conference_effectiveness", type: "scale", scale: "performance", na: true, label: "Effectiveness of the annual conference." },
-        { id: "conference_improve", type: "textarea", label: "What would make the annual conference more valuable or attractive?" },
-        { id: "award_note", type: "note", label: "MOWA’s listed Excellence in Craft categories include: Cliff Ketcham Award — Best Outdoor Feature; C.A. “Frenchy” Paquin Award — News Related Articles; Charlie Welch Award — Photography; Mort Neff Award — Broadcast Media; James H. Hall Award — Outdoor Activities; and James A. O. Crowe Award — Best Outdoor Column." },
-        { id: "awards_importance", type: "scale", scale: "importance", label: "Importance of craft or excellence awards." },
-        { id: "awards_effectiveness", type: "scale", scale: "performance", na: true, label: "How well do the listed award categories reflect the full range of outdoor communication members create?" },
-        { id: "award_categories_to_add", type: "checkbox", label: "Which award categories should MOWA consider adding or separating? Select all that apply.", options: ["Podcast episode", "Short-form video", "Long-form video / documentary", "Website or digital project", "Newsletter", "Social media storytelling series", "Photo essay", "Conservation explainer", "Outdoor education / interpretation", "Student or emerging creator work", "No additions needed", "Other"] },
-        { id: "awards_changes", type: "textarea", label: "What award category changes, if any, would make the awards more useful or representative?" },
-        { id: "water_conservation_importance", type: "scale", scale: "importance", label: "Importance of conservation, clean water, and responsible recreation programs or recognition." },
-        { id: "water_conservation_effectiveness", type: "scale", scale: "performance", na: true, label: "Effectiveness of MOWA’s conservation-related programs or recognition." },
-        { id: "heritage_importance", type: "scale", scale: "importance", label: "Importance of preserving MOWA history, memorials, and legacy programs." },
-        { id: "heritage_effectiveness", type: "scale", scale: "performance", na: true, label: "Effectiveness of MOWA’s heritage, memorial, or history-related efforts." }
+      id: "delivery-1",
+      section: "delivery",
+      part: "1 of 2",
+      title: "How is MOWA doing?",
+      intro: "Please rate how well MOWA is doing in the following areas.",
+      matrixScale: "performance",
+      items: [
+        { id: "perf_writers", label: "MOWA supports outdoor writers." },
+        { id: "perf_multimedia", label: "MOWA supports photographers, videographers, podcasters, websites, digital creators, and other nontraditional outdoor communicators." },
+        { id: "perf_craft", label: "MOWA helps members improve their craft." },
+        { id: "perf_opportunities", label: "MOWA helps members find opportunities, contacts, assignments, or collaborations." },
+        { id: "perf_networking", label: "MOWA provides valuable networking." }
       ]
     },
     {
-      id: "membership",
-      eyebrow: "Part 6",
-      title: "Membership and public communication",
-      intro: "This section looks at how easy MOWA is to understand, join, and recommend to others.",
-      questions: [
-        { id: "standards_importance", type: "scale", scale: "importance", label: "Importance of maintaining professional standards for membership." },
-        { id: "standards_effectiveness", type: "scale", scale: "performance", na: true, label: "How well does the membership process protect professional standards?" },
-        { id: "recruitment_effectiveness", type: "scale", scale: "performance", na: true, label: "How well does the membership process encourage qualified or promising people to apply?" },
-        { id: "sponsor_barrier", type: "radio", label: "For someone who does not already know a MOWA member, does the membership process feel welcoming?", options: ["Yes", "Mostly", "Somewhat", "No", "Not sure"] },
-        { id: "clear_path_unpaid", type: "radio", label: "Should MOWA offer a clearer path for serious outdoor creators who are not yet regularly paid?", options: ["Yes", "Maybe", "No", "Not sure"] },
-        { id: "clear_path_digital", type: "radio", label: "Should MOWA offer a clearer path for digital creators, podcasters, videographers, photographers, website publishers, and social media creators?", options: ["Yes", "Maybe", "No", "Not sure"] },
-        { id: "website_importance", type: "scale", scale: "importance", label: "Importance of the website for explaining MOWA and attracting members." },
-        { id: "website_recruiting", type: "scale", scale: "performance", na: true, label: "How well does the website explain who belongs in MOWA and why they should join?" },
-        { id: "public_comms_importance", type: "scale", scale: "importance", label: "Importance of active public communication beyond the website." },
-        { id: "public_comms_effectiveness", type: "scale", scale: "performance", na: true, label: "How well does MOWA communicate with the public and prospective members beyond the website?" },
-        { id: "membership_barriers", type: "textarea", label: "What, if anything, might discourage qualified or promising people from joining?" }
+      id: "delivery-2",
+      section: "delivery",
+      part: "2 of 2",
+      title: "How is MOWA doing?",
+      intro: "Please continue rating how well MOWA is doing in the following areas.",
+      matrixScale: "performance",
+      items: [
+        { id: "perf_mentoring", label: "MOWA mentors younger or newer communicators." },
+        { id: "perf_students", label: "MOWA welcomes students and early-career creators." },
+        { id: "perf_women_broader", label: "MOWA welcomes women and a broader range of outdoor voices." },
+        { id: "perf_conservation", label: "MOWA promotes conservation, natural resources, clean water, and responsible outdoor recreation." },
+        { id: "member_value", label: "Overall, MOWA has been valuable to me personally." }
       ]
     },
     {
-      id: "future",
-      eyebrow: "Part 7",
-      title: "Possible future activities",
-      intro: "Rate how valuable these ideas would be. This does not mean MOWA must do them all; it helps identify what deserves discussion.",
-      questions: [
-        { id: "future_website", type: "scale", scale: "value", label: "A refreshed website focused on member benefits, events, awards, and who belongs in MOWA." },
-        { id: "future_who_can_join", type: "scale", scale: "value", label: "A clearer “Who Can Join?” page for writers, photographers, filmmakers, podcasters, digital creators, conservation communicators, and others." },
-        { id: "future_no_sponsor", type: "scale", scale: "value", label: "A “Don’t know a sponsor? We’ll connect you” path for prospective members." },
-        { id: "future_student", type: "scale", scale: "value", label: "A student or emerging-creator membership category with lower cost and mentoring." },
-        { id: "future_mentorship", type: "scale", scale: "value", label: "A formal mentorship program pairing experienced members with newer creators." },
-        { id: "future_webinars", type: "scale", scale: "value", label: "Online workshops on writing, photography, video, podcasting, freelancing, ethics, conservation reporting, and digital publishing." },
-        { id: "future_directory", type: "scale", scale: "value", label: "A member directory that helps members find collaborators, editors, photographers, speakers, podcast guests, and subject experts." },
-        { id: "future_opportunity_board", type: "scale", scale: "value", label: "A job, assignment, pitch, or opportunity board." },
-        { id: "future_partnerships", type: "scale", scale: "value", label: "More partnerships with colleges, conservation organizations, tourism groups, agencies, outdoor brands, and publishers." },
-        { id: "future_modern_awards", type: "scale", scale: "value", label: "Award categories for podcasting, video, websites, newsletters, social media storytelling, photo essays, conservation explainers, and digital projects." },
-        { id: "future_spotlights", type: "scale", scale: "value", label: "A member spotlight series featuring members’ work." },
-        { id: "future_meetups", type: "scale", scale: "value", label: "Regional meetups or informal outdoor/content gatherings between annual conferences." }
+      id: "activities-1",
+      section: "activities",
+      part: "1 of 2",
+      title: "Activities and member experience",
+      intro: "Please rate how well the following activities or areas serve members.",
+      matrixScale: "performance",
+      items: [
+        { id: "conference_effectiveness", label: "The annual conference serves members well." },
+        { id: "membership_clarity", label: "The membership process is clear and understandable." },
+        { id: "welcome_new_people", label: "People who do not already know a MOWA member would feel welcome." },
+        { id: "communication_effectiveness", label: "MOWA communicates clearly with members and prospective members." },
+        { id: "website_effectiveness", label: "The website helps explain what MOWA is and who belongs in it." }
       ]
     },
     {
-      id: "involvement",
-      eyebrow: "Part 8",
-      title: "Priorities and involvement",
-      intro: "This section identifies what should happen first and who may be willing to help.",
-      questions: [
-        { id: "priority_1", type: "text", label: "What should MOWA prioritize first?" },
-        { id: "priority_2", type: "text", label: "What should MOWA prioritize second?" },
-        { id: "priority_3", type: "text", label: "What should MOWA prioritize third?" },
-        { id: "want_involved", type: "radio", label: "Would you like to become more involved in MOWA’s work?", options: ["Yes", "Maybe", "No", "Already involved enough", "Not sure"] },
-        { id: "help_areas", type: "checkbox", label: "Where might you be willing to help? Select all that apply.", options: ["Membership outreach", "Website / communications", "Social media", "Conference planning", "Awards", "Mentoring newer members", "Student outreach", "Conservation / clean water work", "Partnerships", "Member spotlights", "Regional meetups", "I am not looking for a role", "Other"] },
-        { id: "help_support_needed", type: "textarea", label: "What would make it easier for you to get involved?" },
-        { id: "contact_note", type: "note", label: "Optional contact information: You may leave this blank. Add your name or email only if you are willing to be contacted about your response, volunteer for a committee, help with outreach, or get more involved with MOWA." },
-        { id: "contact_name", type: "text", label: "Optional: name" },
-        { id: "contact_email", type: "email", label: "Optional: email address" },
-        { id: "contact_followup", type: "checkbox", label: "If you provided contact information, what follow-up would be okay? Select all that apply.", options: ["Contact me about my response", "Contact me about helping with membership outreach", "Contact me about website or communications work", "Contact me about committees or volunteer roles", "Contact me about mentoring or being mentored", "No follow-up needed"] },
-        { id: "future_other", type: "textarea", label: "Are there any activities not listed that MOWA should consider?" }
+      id: "activities-2",
+      section: "activities",
+      part: "2 of 2",
+      title: "Activities and member experience",
+      intro: "Please use these written answers to add context or ideas.",
+      fields: [
+        { id: "conference_improve", type: "textarea", rows: 2, label: "What would make the annual conference more valuable or attractive?" },
+        { id: "does_well", type: "textarea", rows: 2, label: "What is MOWA doing especially well?" },
+        { id: "not_well", type: "textarea", rows: 2, label: "What is MOWA not doing well enough?" }
       ]
     },
     {
-      id: "tradeoffs",
-      eyebrow: "Part 9",
-      title: "Keeping what works, improving what doesn’t",
-      intro: "This gives every respondent room to name what should be protected and what could be improved.",
-      questions: [
-        { id: "direction_view", type: "radio", label: "Which statement best describes your view?", options: ["MOWA should mostly preserve its structure and activities.", "MOWA should make small improvements but avoid major shifts.", "MOWA should refresh some areas while preserving its core traditions.", "MOWA should revisit several major areas to remain relevant.", "Not sure."] },
-        { id: "urgency_new_members", type: "scale", scale: "urgency", label: "How urgent is the need to attract new members?" },
-        { id: "concern_relevance", type: "scale", scale: "concern", label: "How concerned are you about MOWA’s ability to remain active and relevant over the next 5–10 years?" },
-        { id: "comfort_supporting_improvements", type: "textarea", label: "What would make you more comfortable supporting improvements to MOWA?" },
-        { id: "go_too_far", type: "textarea", label: "What kinds of changes would concern you or go too far?" },
-        { id: "preserve", type: "textarea", label: "What should MOWA be careful to preserve?" },
-        { id: "five_year_risk", type: "textarea", label: "If MOWA stays mostly as it is, what do you think is likely to happen over the next 5–10 years?" }
+      id: "awards-1",
+      section: "awards",
+      part: "1 of 1",
+      title: "Awards and recognition",
+      intro: "MOWA’s listed Excellence in Craft categories include Best Outdoor Feature, News Related Articles, Photography, Broadcast Media, Outdoor Activities, and Outdoor Column.",
+      note: "This section asks whether those categories and related recognition still reflect the kinds of outdoor communication MOWA should encourage.",
+      matrixScale: "performance",
+      items: [
+        { id: "awards_reflect_work", label: "The listed award categories reflect the range of work MOWA members create." },
+        { id: "awards_support_growth", label: "The awards help encourage stronger work and professional growth." },
+        { id: "awards_welcome_new_formats", label: "Video, podcasting, websites, newsletters, and other digital work are represented well enough." },
+        { id: "awards_recognize_new_voices", label: "Student, apprentice, or emerging-creator work is recognized clearly enough." }
+      ],
+      fields: [
+        { id: "awards_changes", type: "textarea", rows: 2, label: "What award category changes, if any, would make the awards more useful or more representative?" }
       ]
     },
     {
-      id: "missionfit",
-      eyebrow: "Part 10",
-      title: "Mission fit",
-      intro: "These questions compare what MOWA says it exists to do with what members experience.",
-      questions: [
-        { id: "fit_professional", type: "scale", scale: "fit", na: true, label: "How well does MOWA support professional outdoor communicators?" },
-        { id: "fit_all_forms", type: "scale", scale: "fit", na: true, label: "How well does MOWA support all major forms of outdoor communication, including writing, photography, video, audio, web, and digital media?" },
-        { id: "fit_skills", type: "scale", scale: "fit", na: true, label: "How well does MOWA help members improve communication skills?" },
-        { id: "fit_careers", type: "scale", scale: "fit", na: true, label: "How well does MOWA help further members’ careers or creative goals?" },
-        { id: "fit_networking", type: "scale", scale: "fit", na: true, label: "How well does MOWA provide meaningful networking opportunities?" },
-        { id: "fit_next_gen", type: "scale", scale: "fit", na: true, label: "How well does MOWA inspire and mentor the next generation of outdoor media professionals?" },
-        { id: "fit_conservation", type: "scale", scale: "fit", na: true, label: "How well does MOWA support conservation, natural resources, and responsible outdoor recreation?" },
-        { id: "fit_biggest_gap", type: "textarea", label: "Where do you see the biggest gap between what MOWA says it does and what people experience?" }
+      id: "future-1",
+      section: "future",
+      part: "1 of 2",
+      title: "Potential future activities",
+      intro: "Please rate how valuable each of the following ideas would be for MOWA.",
+      matrixScale: "value",
+      items: [
+        { id: "future_website", label: "A redesigned website focused on recruiting new members and explaining member benefits." },
+        { id: "future_join_path", label: "A clearer explanation of who belongs in MOWA, including writers, photographers, filmmakers, podcasters, digital creators, and conservation communicators." },
+        { id: "future_mentor", label: "A formal mentorship program pairing experienced members with newer creators." },
+        { id: "future_student_path", label: "A clearer student or emerging-creator membership path." },
+        { id: "future_workshops", label: "Online workshops or webinars on writing, photography, video, podcasting, ethics, freelancing, or digital publishing." }
       ]
     },
     {
-      id: "final",
-      eyebrow: "Part 11",
-      title: "Final questions",
-      intro: "These open answers often produce the clearest language for board discussion and planning.",
-      questions: [
-        { id: "most_important_new_members", type: "textarea", label: "What is the single most important thing MOWA should do to attract new members?" },
-        { id: "most_important_existing", type: "textarea", label: "What is the single most important thing MOWA should do to better serve existing members?" },
-        { id: "support_young", type: "textarea", label: "What is the single most important thing MOWA should do to support younger or emerging outdoor communicators?" },
-        { id: "welcome_women", type: "textarea", label: "What is the single most important thing MOWA should do to welcome more women and a broader range of outdoor voices?" },
-        { id: "additional_comments", type: "textarea", label: "Any additional comments?" }
+      id: "future-2",
+      section: "future",
+      part: "2 of 2",
+      title: "Potential future activities",
+      intro: "Please continue rating how valuable the following ideas would be for MOWA.",
+      matrixScale: "value",
+      items: [
+        { id: "future_member_spotlights", label: "A member spotlight series featuring members’ work and projects." },
+        { id: "future_partnerships", label: "More partnerships with universities, journalism programs, conservation organizations, tourism groups, agencies, and outdoor brands." },
+        { id: "future_new_formats", label: "New or expanded award categories for podcasting, video, websites, newsletters, social storytelling, or photo essays." },
+        { id: "future_meetups", label: "Regional meetups or informal gatherings between annual conferences." },
+        { id: "future_stronger_social", label: "A stronger social media or public-outreach presence showing member work, events, awards, and ways to join." }
+      ]
+    },
+    {
+      id: "involvement-1",
+      section: "involvement",
+      part: "1 of 2",
+      title: "Would you like to be involved?",
+      intro: "This is about opportunity, not obligation. Select anything that might interest you.",
+      fields: [
+        { id: "involvement_interest", type: "checkbox", label: "If MOWA invited more member involvement, which areas might interest you? Select all that apply.", options: ["Membership outreach", "Website or communications help", "Conference planning", "Awards planning", "Mentorship", "Committee work", "Board service", "No additional involvement at this time", "Other"] }
+      ]
+    },
+    {
+      id: "involvement-2",
+      section: "involvement",
+      part: "2 of 2",
+      title: "Optional contact information",
+      intro: "Leave these fields blank if you prefer not to be contacted. Contact information is only for follow-up or involvement opportunities.",
+      fields: [
+        { id: "contact_name", type: "text", label: "Optional: What is your name?" },
+        { id: "contact_email", type: "email", label: "Optional: What email address should MOWA use to contact you?" },
+        { id: "contact_permission", type: "checkbox", label: "If you share contact information, which kinds of follow-up would be okay? Select all that apply.", options: ["Contact me about my response.", "Send information about outreach or communications help.", "Send information about committee or volunteer opportunities.", "Send information about mentoring or being mentored."] }
+      ]
+    },
+    {
+      id: "final-1",
+      section: "final",
+      part: "1 of 2",
+      title: "Overall direction",
+      intro: "Please rate how strongly you agree or disagree with these statements.",
+      matrixScale: "readiness",
+      items: [
+        { id: "urgency_membership", label: "Attracting new members is important for MOWA’s future." },
+        { id: "urgency_relevance", label: "MOWA should pay attention to how outdoor communication is changing." },
+        { id: "urgency_preserve_and_update", label: "MOWA can preserve what matters while updating how it serves members and welcomes new people." },
+        { id: "urgency_member_voice", label: "Member priorities should help guide MOWA’s activities and outreach." }
+      ],
+      fields: [
+        { id: "single_most_important_new_members", type: "textarea", rows: 2, label: "What is the single most important thing MOWA should do to attract new members?" },
+        { id: "single_most_important_existing_members", type: "textarea", rows: 2, label: "What is the single most important thing MOWA should do to better serve existing members?" }
+      ]
+    },
+    {
+      id: "final-2",
+      section: "final",
+      part: "2 of 2",
+      title: "Looking ahead",
+      intro: "Use these final questions to describe what success would look like.",
+      fields: [
+        { id: "single_most_important_relevant", type: "textarea", rows: 2, label: "What is the single most important thing MOWA should do to stay relevant as outdoor media changes?" },
+        { id: "five_years", type: "textarea", rows: 3, label: "What should MOWA look like five years from now?" },
+        { id: "additional_comments", type: "textarea", rows: 3, label: "Is there anything else you would like MOWA’s members or board to consider?" }
       ]
     }
   ],
   gapPairs: [
     { label: "Support outdoor writers", importance: "imp_writers", performance: "perf_writers" },
-    { label: "Support multimedia/digital creators", importance: "imp_multimedia", performance: "perf_multimedia" },
+    { label: "Support multimedia and digital creators", importance: "imp_multimedia", performance: "perf_multimedia" },
     { label: "Craft improvement", importance: "imp_craft", performance: "perf_craft" },
-    { label: "Opportunities / assignments / collaborations", importance: "imp_opportunities", performance: "perf_opportunities" },
+    { label: "Opportunities and collaborations", importance: "imp_opportunities", performance: "perf_opportunities" },
     { label: "Networking", importance: "imp_networking", performance: "perf_networking" },
     { label: "Mentoring newer communicators", importance: "imp_mentoring", performance: "perf_mentoring" },
     { label: "Students and early-career creators", importance: "imp_students", performance: "perf_students" },
     { label: "Women and broader outdoor voices", importance: "imp_women_broader", performance: "perf_women_broader" },
-    { label: "Conservation / natural resources / responsible recreation", importance: "imp_conservation", performance: "perf_conservation" },
-    { label: "Heritage and legacy", importance: "imp_heritage", performance: "heritage_effectiveness" },
-    { label: "Annual conference", importance: "conference_importance", performance: "conference_effectiveness" },
-    { label: "Awards / recognition", importance: "awards_importance", performance: "awards_effectiveness" },
-    { label: "Membership standards vs recruitment", importance: "standards_importance", performance: "recruitment_effectiveness" },
-    { label: "Website as recruitment tool", importance: "website_importance", performance: "website_recruiting" },
-    { label: "Public communication beyond the website", importance: "public_comms_importance", performance: "public_comms_effectiveness" },
-    { label: "Conservation programs", importance: "water_conservation_importance", performance: "water_conservation_effectiveness" }
+    { label: "Conservation and responsible recreation", importance: "imp_conservation", performance: "perf_conservation" }
   ]
 };

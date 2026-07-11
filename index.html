@@ -3,153 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MOWA Member Direction Questionnaire</title>
-  <meta name="description" content="A member and board direction questionnaire for the Michigan Outdoor Writers Association." />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="css/styles.css" />
+  <title>Help Shape MOWA’s Next Chapter</title>
+  <meta name="description" content="MOWA member and board direction questionnaire." />
+  <link rel="stylesheet" href="css/app.css" />
 </head>
-<body>
-  <a class="skip-link" href="#survey">Skip to questionnaire</a>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="#top" aria-label="MOWA Member Direction Questionnaire home">
-        <img src="https://miowa.net/wp-content/uploads/2022/04/miowa-logo-544x180-1.png" onerror="this.onerror=null;this.src='assets/mowa-mark.svg';" alt="Michigan Outdoor Writers Association logo" />
-      </a>
-      <nav aria-label="Main navigation">
-        <a href="#overview">Read overview</a>
-        <a href="#survey">Take questionnaire</a>
-        <a href="results.html">Analyze results</a>
-      </nav>
+<body class="survey-app">
+  <header class="app-header">
+    <a class="brand" href="#" id="homeLink" aria-label="Return to the first page">
+      <img src="assets/mowa-logo.webp" alt="Michigan Outdoor Writers Association" />
+    </a>
+    <div class="header-meta">
+      <span id="saveStatus">Answers save in this browser</span>
+      <button type="button" class="text-button" id="saveDraft">Save</button>
+      <button type="button" class="text-button" id="exportDraft">Export</button>
     </div>
   </header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">Member and board direction questionnaire</p>
-          <h1>Help shape MOWA’s next chapter.</h1>
-          <p class="lead">This questionnaire asks what members expected from MOWA, how well those expectations have been met, what people value most, and what activities could make MOWA stronger for outdoor communicators of every format.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#survey">Jump straight to the questionnaire</a>
-            <a class="button ghost" href="#overview">Read the overview first</a>
-          </div>
-          <div class="trust-strip" aria-label="Questionnaire focus areas">
-            <span>Writers</span><span>Photography</span><span>Video</span><span>Podcasts</span><span>Websites</span><span>Conservation</span>
-          </div>
-        </div>
-        <div class="hero-visual hero-logo-card" aria-label="MOWA identity">
-          <img src="https://miowa.net/wp-content/uploads/2022/04/miowa-logo-544x180-1.png" onerror="this.onerror=null;this.src='assets/mowa-mark.svg';" alt="Michigan Outdoor Writers Association logo" />
-          <p>MOWA’s public mission describes a group of professional outdoor communicators that supports all forms of communication, networking, skill development, career growth, and mentoring the next generation.</p>
-        </div>
-      </div>
-    </section>
+  <main class="app-main" aria-live="polite">
+    <div class="section-progress" id="sectionProgress" hidden>
+      <div class="section-tabs" id="sectionTabs" aria-label="Questionnaire sections"></div>
+      <div class="progress-line" aria-hidden="true"><span id="progressBar"></span></div>
+    </div>
 
-    <section id="overview" class="overview-section" aria-labelledby="overview-heading">
-      <div class="container">
-        <p class="eyebrow">Overview</p>
-        <h2 id="overview-heading">What this questionnaire is designed to learn</h2>
-        <div class="overview-grid">
-          <article class="overview-card">
-            <h3>Expectations</h3>
-            <p>What people hoped MOWA would do when they joined or considered joining, and whether those hopes have been met.</p>
-          </article>
-          <article class="overview-card">
-            <h3>Activities</h3>
-            <p>How well conferences, awards, membership pathways, communication, conservation work, and heritage efforts serve members.</p>
-          </article>
-          <article class="overview-card">
-            <h3>Next steps</h3>
-            <p>Which possible activities deserve attention, who wants to be involved, and what should be preserved along the way.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="official-note" aria-labelledby="official-heading">
-      <div class="container note-grid">
-        <article class="note-card">
-          <p class="eyebrow">Public identity</p>
-          <h2 id="official-heading">MOWA already includes more than writers.</h2>
-          <p>The public site describes MOWA as a nonprofit of outdoor communicators and lists writers, photographers, editors, video, lecturers, public relations specialists, and radio/television journalists among the people it serves.</p>
-        </article>
-        <article class="note-card">
-          <p class="eyebrow">Member experience</p>
-          <h2>It asks what people expected.</h2>
-          <p>The questionnaire includes a direct section on whether MOWA has done what people wanted it to do when they signed up, what has been useful, and what more it could provide.</p>
-        </article>
-        <article class="note-card highlight">
-          <p class="eyebrow">Practical result</p>
-          <h2>It produces numbers and comments.</h2>
-          <p>Results can be summarized as expectation-versus-delivery gaps, plus open comments for the board to review without making the questionnaire feel like a loaded ambush.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="why" class="why-section">
-      <div class="container split">
-        <div>
-          <p class="eyebrow">Why this format works</p>
-          <h2>It asks members to define the job before judging the tools.</h2>
-          <p>Rather than starting with a debate over the website, awards, membership process, or social media, this first asks what MOWA should be doing. Then it asks how well MOWA is doing those things.</p>
-        </div>
-        <div class="feature-grid">
-          <div class="feature"><span>01</span><strong>Expectations</strong><p>What members believe the organization should provide.</p></div>
-          <div class="feature"><span>02</span><strong>Experience</strong><p>Whether MOWA has met what people hoped for.</p></div>
-          <div class="feature"><span>03</span><strong>Programs</strong><p>How activities, awards, events, and outreach are landing.</p></div>
-          <div class="feature"><span>04</span><strong>Involvement</strong><p>Who wants to help and what would make that easier.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="survey" class="survey-shell" aria-labelledby="survey-title">
-      <div class="container">
-        <div class="survey-head">
-          <div>
-            <p class="eyebrow">Questionnaire</p>
-            <h2 id="survey-title">MOWA Member & Board Direction Questionnaire</h2>
-            <p>One question is shown at a time. Contact information is optional and only needed if someone wants follow-up or wants to help.</p>
-          </div>
-          <div class="save-status" id="saveStatus">Draft not started</div>
-        </div>
-
-        <div class="progress-wrap" aria-hidden="true">
-          <div class="progress-bar"><span id="progressBar"></span></div>
-          <span id="progressText">0% complete</span>
-        </div>
-
-        <form id="surveyForm" novalidate>
-          <div class="section-tabs" id="sectionTabs" aria-label="Questionnaire sections"></div>
-          <div id="sectionContainer"></div>
-          <div class="form-actions">
-            <button class="button secondary" type="button" id="prevSection">Back</button>
-            <button class="button secondary" type="button" id="saveDraft">Save draft</button>
-            <button class="button secondary" type="button" id="exportDraft">Export draft JSON</button>
-            <button class="button primary" type="button" id="nextSection">Next</button>
-            <button class="button primary hidden" type="submit" id="submitSurvey">Submit response</button>
-          </div>
-        </form>
-        <div id="submitMessage" class="submit-message" hidden></div>
-      </div>
-    </section>
+    <div class="screen-host" id="screenHost"></div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <strong>MOWA Member Direction Questionnaire</strong>
-        <p>Draft site for member and board review. Review wording before public release.</p>
-      </div>
-      <div>
-        <strong>Source notes</strong>
-        <p>Public facts and program references were adapted from miowa.net pages covering MOWA’s mission, about page, membership classes, awards, conference, partners, Hall of Fame, and Clean Waterways Award.</p>
-      </div>
-      <div>
-        <strong>Data note</strong>
-        <p>Contact information is optional. No account-level GitHub or Supabase changes are made by this static site. Supabase storage uses one namespaced table.</p>
-      </div>
+  <footer class="app-footer">
+    <div class="footer-left">
+      <span id="pageCount">Page 1</span>
+      <span class="footer-divider" aria-hidden="true">•</span>
+      <span id="progressText">Introduction</span>
     </div>
+    <div class="footer-actions" id="footerActions"></div>
   </footer>
+
+  <dialog id="messageDialog" class="message-dialog">
+    <div id="dialogContent"></div>
+    <button type="button" class="button primary" id="closeDialog">Close</button>
+  </dialog>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
