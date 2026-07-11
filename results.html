@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MOWA Survey Results Analyzer</title>
+  <meta name="description" content="Analyze MOWA direction survey exports and importance-performance gaps." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="results-page">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="MOWA Direction Survey home"><img src="assets/mowa-mark.svg" alt="MOWA Direction Survey" /></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html#survey">Take survey</a>
+        <a href="#analyzer">Analyze</a>
+        <a href="#matrix">Mission matrix</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero compact">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Local / exported analysis</p>
+          <h1>Turn responses into board-ready evidence.</h1>
+          <p class="lead">Upload exported JSON, use responses saved in this browser, or paste JSON from Supabase. The analyzer calculates averages and importance-versus-performance gaps.</p>
+        </div>
+        <div class="mini-dashboard" aria-hidden="true">
+          <div class="dash-card"><span></span><strong>Importance</strong><em>4.6</em></div>
+          <div class="dash-card"><span></span><strong>Performance</strong><em>2.2</em></div>
+          <div class="dash-card warn"><span></span><strong>Gap</strong><em>2.4</em></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="analyzer" class="survey-shell">
+      <div class="container">
+        <div class="survey-head">
+          <div>
+            <p class="eyebrow">Results analyzer</p>
+            <h2>Load responses</h2>
+            <p>For real deployment, keep Supabase reads private. Export JSON from the Supabase dashboard, then analyze it here. Boring security beats exciting data leaks.</p>
+          </div>
+        </div>
+        <div class="load-panel">
+          <button class="button primary" id="loadLocal">Use browser responses</button>
+          <label class="button secondary file-button">Upload JSON <input id="jsonUpload" type="file" accept="application/json,.json" /></label>
+          <button class="button secondary" id="downloadSummary" disabled>Download summary CSV</button>
+        </div>
+        <textarea id="jsonPaste" class="paste-box" placeholder="Or paste a JSON array of responses here, then click Analyze pasted JSON."></textarea>
+        <button class="button secondary" id="analyzePasted">Analyze pasted JSON</button>
+        <div id="analysisStatus" class="save-status inline-status">No data loaded yet.</div>
+
+        <div id="summaryCards" class="summary-cards"></div>
+        <div class="table-wrap"><table id="gapTable"></table></div>
+        <div class="table-wrap"><table id="scaleTable"></table></div>
+        <section id="matrix" class="matrix-panel">
+          <h2>Mission / bylaw comparison helper</h2>
+          <p>Use this grid after you have actual bylaws in hand. The analyzer fills the scores; the board fills the interpretation.</p>
+          <div class="table-wrap"><table id="missionTable"></table></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container"><p>Draft analysis tool. No Supabase reads are built into this public page by default.</p></div></footer>
+  <script src="js/questions.js"></script>
+  <script src="js/results.js"></script>
+</body>
+</html>

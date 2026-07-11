@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="640" viewBox="0 0 920 640" role="img" aria-labelledby="title desc">
+  <title id="title">Outdoor media creator collage</title>
+  <desc id="desc">Stylized field notes, camera, microphone, river, map pins, and a laptop for outdoor media creators.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f6ead4"/>
+      <stop offset=".55" stop-color="#d8e8db"/>
+      <stop offset="1" stop-color="#a9c4bb"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#163a2d" flood-opacity=".22"/>
+    </filter>
+  </defs>
+  <rect width="920" height="640" rx="42" fill="url(#sky)"/>
+  <circle cx="750" cy="92" r="54" fill="#f2ac45" opacity=".95"/>
+  <path d="M0 420C120 365 215 370 334 424s202 65 328 19c100-36 182-47 258-2v199H0z" fill="#164634" opacity=".92"/>
+  <path d="M0 462c139-59 250-24 360 19 102 40 199 22 300-14 99-35 184-36 260 20v153H0z" fill="#0e2f27" opacity=".92"/>
+  <path d="M0 538c152-57 290-49 430 1s305 32 490-52v153H0z" fill="#0b5b6c" opacity=".78"/>
+  <g filter="url(#shadow)">
+    <rect x="64" y="70" width="236" height="156" rx="24" fill="#fff8ea"/>
+    <path d="M92 121h176M92 154h145M92 187h104" stroke="#8e7357" stroke-width="8" stroke-linecap="round" opacity=".72"/>
+    <circle cx="250" cy="95" r="19" fill="#d47b2a"/>
+    <path d="M80 224l39-45 44 45" fill="#d47b2a" opacity=".25"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="365" y="92" width="224" height="178" rx="28" fill="#153f31"/>
+    <rect x="395" y="129" width="164" height="99" rx="18" fill="#e6f0df"/>
+    <circle cx="477" cy="178" r="38" fill="none" stroke="#153f31" stroke-width="12"/>
+    <circle cx="536" cy="144" r="12" fill="#153f31"/>
+    <rect x="423" y="101" width="62" height="25" rx="8" fill="#d47b2a"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="642" y="186" width="190" height="252" rx="28" fill="#fff8ea"/>
+    <path d="M738 236v115" stroke="#163a2d" stroke-width="16" stroke-linecap="round"/>
+    <rect x="707" y="205" width="62" height="94" rx="31" fill="#d47b2a"/>
+    <path d="M697 354c11 25 72 25 83 0" fill="none" stroke="#163a2d" stroke-width="12" stroke-linecap="round"/>
+    <path d="M738 379v33M707 412h62" stroke="#163a2d" stroke-width="12" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="158" y="286" width="332" height="202" rx="30" fill="#fbf1db"/>
+    <path d="M197 343c67-52 140-32 215-57" fill="none" stroke="#0b5b6c" stroke-width="10" stroke-linecap="round" opacity=".75"/>
+    <path d="M202 410c67-35 133-18 236-58" fill="none" stroke="#0b5b6c" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+    <path d="M265 318c0-25 38-25 38 0 0 22-19 38-19 38s-19-16-19-38z" fill="#d47b2a"/>
+    <circle cx="284" cy="318" r="8" fill="#fbf1db"/>
+    <path d="M385 382c0-25 38-25 38 0 0 22-19 38-19 38s-19-16-19-38z" fill="#164634"/>
+    <circle cx="404" cy="382" r="8" fill="#fbf1db"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="500" y="436" width="284" height="132" rx="22" fill="#173b32"/>
+    <rect x="530" y="460" width="224" height="73" rx="10" fill="#eef5e9"/>
+    <path d="M600 546h88" stroke="#fbf1db" stroke-width="11" stroke-linecap="round"/>
+    <path d="M558 489h88M558 511h152" stroke="#173b32" stroke-width="8" stroke-linecap="round" opacity=".7"/>
+  </g>
+</svg>

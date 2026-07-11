@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="160" viewBox="0 0 420 160" role="img" aria-labelledby="title desc">
+  <title id="title">MOWA direction survey mark</title>
+  <desc id="desc">A clean outdoor media inspired mark with trees, waves, and media symbols.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0f3d2e"/>
+      <stop offset="0.55" stop-color="#176d5d"/>
+      <stop offset="1" stop-color="#d47b2a"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="140" height="140" rx="32" fill="url(#g)"/>
+  <path d="M38 106c25-17 57-18 91-2" fill="none" stroke="#fbf1db" stroke-width="7" stroke-linecap="round"/>
+  <path d="M35 121c29-14 62-14 96 0" fill="none" stroke="#fbf1db" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+  <path d="M62 91l18-42 18 42H62z" fill="#fbf1db"/>
+  <path d="M82 91l23-54 23 54H82z" fill="#dbe8d2"/>
+  <circle cx="58" cy="47" r="13" fill="#f6b553"/>
+  <circle cx="113" cy="64" r="14" fill="none" stroke="#fbf1db" stroke-width="6"/>
+  <rect x="103" y="52" width="48" height="30" rx="7" fill="none" stroke="#fbf1db" stroke-width="6"/>
+  <path d="M135 82l16 14" stroke="#fbf1db" stroke-width="6" stroke-linecap="round"/>
+  <text x="175" y="74" font-family="Georgia, 'Times New Roman', serif" font-size="50" font-weight="700" fill="#103a2d">MOWA</text>
+  <text x="178" y="107" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="2.3" fill="#d47b2a">DIRECTION SURVEY</text>
+  <text x="178" y="130" font-family="Inter, Arial, sans-serif" font-size="14" fill="#3f514b">Outdoor writers • photographers • creators</text>
+</svg>

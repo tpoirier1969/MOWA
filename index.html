@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MOWA Direction Survey</title>
+  <meta name="description" content="A member and board direction survey for the Michigan Outdoor Writers Association." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#survey">Skip to survey</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="MOWA Direction Survey home">
+        <img src="assets/mowa-mark.svg" alt="MOWA Direction Survey" />
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#why">Why this survey</a>
+        <a href="#survey">Take survey</a>
+        <a href="results.html">Analyze results</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Board and member direction tool</p>
+          <h1>Help shape the next chapter of Michigan outdoor communication.</h1>
+          <p class="lead">MOWA’s public mission already points beyond one format: professional outdoor communicators, all forms of communication, networking, craft growth, mentoring, and conservation. This survey asks whether current activities match that purpose.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#survey">Start the survey</a>
+            <a class="button ghost" href="results.html">Open results analyzer</a>
+          </div>
+          <div class="trust-strip" aria-label="Survey focus areas">
+            <span>Writers</span><span>Photographers</span><span>Video</span><span>Podcasts</span><span>Websites</span><span>Conservation</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <img src="assets/creator-collage.svg" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <section class="official-note" aria-labelledby="official-heading">
+      <div class="container note-grid">
+        <article class="note-card">
+          <p class="eyebrow">Current public identity</p>
+          <h2 id="official-heading">MOWA already describes itself broadly.</h2>
+          <p>The current public site describes MOWA as a nonprofit made up of outdoor communicators, including writers, photographers, editors, video, lecturers, public relations specialists, and radio/television journalists. It also says MOWA supports members engaged in all forms of communication while mentoring the next generation.</p>
+        </article>
+        <article class="note-card highlight">
+          <p class="eyebrow">The question this survey answers</p>
+          <h2>Are current activities matching that mission?</h2>
+          <p>Results are designed to be tallied as importance-versus-performance gaps, then compared against the bylaws and mission. That keeps the discussion grounded in member expectations instead of taste, nostalgia, or board-room weather systems.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="why" class="why-section">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Why this format works</p>
+          <h2>It asks members to define the job before judging the tools.</h2>
+          <p>If people start by arguing about the website, membership rules, awards, or social media, everyone retreats into opinions. This survey first asks what MOWA should be doing, then asks how well MOWA is doing it.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature"><span>01</span><strong>Expectations</strong><p>What members believe the organization should be.</p></div>
+          <div class="feature"><span>02</span><strong>Performance</strong><p>How current activities are serving those expectations.</p></div>
+          <div class="feature"><span>03</span><strong>Possibilities</strong><p>Which future activities deserve board attention.</p></div>
+          <div class="feature"><span>04</span><strong>Bylaws check</strong><p>Where mission, bylaws, tradition, and current practice line up — or don’t.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="survey" class="survey-shell" aria-labelledby="survey-title">
+      <div class="container">
+        <div class="survey-head">
+          <div>
+            <p class="eyebrow">Member questionnaire</p>
+            <h2 id="survey-title">MOWA Member & Board Direction Questionnaire</h2>
+            <p>Answers are saved in this browser while you work. Submit stores locally by default and can also send to Supabase after configuration.</p>
+          </div>
+          <div class="save-status" id="saveStatus">Draft not started</div>
+        </div>
+
+        <div class="progress-wrap" aria-hidden="true">
+          <div class="progress-bar"><span id="progressBar"></span></div>
+          <span id="progressText">0% complete</span>
+        </div>
+
+        <form id="surveyForm" novalidate>
+          <div class="section-tabs" id="sectionTabs" aria-label="Survey sections"></div>
+          <div id="sectionContainer"></div>
+          <div class="form-actions">
+            <button class="button secondary" type="button" id="prevSection">Previous</button>
+            <button class="button secondary" type="button" id="saveDraft">Save draft</button>
+            <button class="button secondary" type="button" id="exportDraft">Export draft JSON</button>
+            <button class="button primary" type="button" id="nextSection">Next</button>
+            <button class="button primary hidden" type="submit" id="submitSurvey">Submit response</button>
+          </div>
+        </form>
+        <div id="submitMessage" class="submit-message" hidden></div>
+      </div>
+    </section>
+
+    <section class="bylaw-map">
+      <div class="container">
+        <p class="eyebrow">After responses come in</p>
+        <h2>Use the results to build a bylaw and mission alignment matrix.</h2>
+        <div class="matrix">
+          <div><strong>Mission / bylaw purpose</strong><span>Support outdoor communicators</span></div>
+          <div><strong>Survey evidence</strong><span>Importance, performance, alignment, open comments</span></div>
+          <div><strong>Decision question</strong><span>Are current activities enough, or is a change needed?</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>MOWA Direction Survey</strong>
+        <p>Draft site for board/member review. Replace any draft wording before public release.</p>
+      </div>
+      <div>
+        <strong>Source notes</strong>
+        <p>Public facts and program references were adapted from miowa.net pages covering MOWA’s mission, about page, membership classifications, awards, conference, partners, Hall of Fame, and Clean Waterways Award.</p>
+      </div>
+      <div>
+        <strong>Data note</strong>
+        <p>No account-level GitHub or Supabase changes are made by this static site. Supabase storage is optional and uses one namespaced table.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
