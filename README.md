@@ -45,7 +45,7 @@ This package does not assume it owns your GitHub account or Supabase account.
 
 ```js
 window.MOWA_SURVEY_CONFIG = {
-  surveyVersion: "mowa-direction-survey-v2",
+  surveyVersion: "mowa-direction-survey-v3",
   supabaseUrl: "https://YOUR-PROJECT.supabase.co",
   supabaseAnonKey: "YOUR_ANON_PUBLIC_KEY",
   tableName: "mowa_direction_survey_responses",

@@ -147,6 +147,10 @@ window.MOWA_QUESTIONNAIRE = {
         { id: "want_involved", type: "radio", label: "Would you like to become more involved in MOWA’s work?", options: ["Yes", "Maybe", "No", "Already involved enough", "Not sure"] },
         { id: "help_areas", type: "checkbox", label: "Where might you be willing to help? Select all that apply.", options: ["Membership outreach", "Website / communications", "Social media", "Conference planning", "Awards", "Mentoring newer members", "Student outreach", "Conservation / clean water work", "Partnerships", "Member spotlights", "Regional meetups", "I am not looking for a role", "Other"] },
         { id: "help_support_needed", type: "textarea", label: "What would make it easier for you to get involved?" },
+        { id: "contact_note", type: "note", label: "Optional contact information: You may leave this blank. Add your name or email only if you are willing to be contacted about your response, volunteer for a committee, help with outreach, or get more involved with MOWA." },
+        { id: "contact_name", type: "text", label: "Optional: name" },
+        { id: "contact_email", type: "email", label: "Optional: email address" },
+        { id: "contact_followup", type: "checkbox", label: "If you provided contact information, what follow-up would be okay? Select all that apply.", options: ["Contact me about my response", "Contact me about helping with membership outreach", "Contact me about website or communications work", "Contact me about committees or volunteer roles", "Contact me about mentoring or being mentored", "No follow-up needed"] },
         { id: "future_other", type: "textarea", label: "Are there any activities not listed that MOWA should consider?" }
       ]
     },

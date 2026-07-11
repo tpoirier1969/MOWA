@@ -1,7 +1,8 @@
 (() => {
   const qdata = window.MOWA_QUESTIONNAIRE;
-  const submissionsKey = 'mowa_direction_survey_submissions_v2';
-  const legacySubmissionsKey = 'mowa_direction_survey_submissions_v1';
+  const submissionsKey = 'mowa_direction_survey_submissions_v3';
+  const legacySubmissionsKey = 'mowa_direction_survey_submissions_v2';
+  const olderSubmissionsKey = 'mowa_direction_survey_submissions_v1';
   const status = document.getElementById('analysisStatus');
   const summaryCards = document.getElementById('summaryCards');
   const gapTable = document.getElementById('gapTable');
@@ -127,7 +128,10 @@
     try {
       const records = JSON.parse(localStorage.getItem(submissionsKey) || '[]');
       if (records.length) analyze(records);
-      else analyze(JSON.parse(localStorage.getItem(legacySubmissionsKey) || '[]'));
+      else {
+        const legacy = JSON.parse(localStorage.getItem(legacySubmissionsKey) || '[]');
+        analyze(legacy.length ? legacy : JSON.parse(localStorage.getItem(olderSubmissionsKey) || '[]'));
+      }
     } catch {
       status.textContent = 'Could not read browser responses.';
     }
