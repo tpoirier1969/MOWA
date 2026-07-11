@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MOWA Survey Results Analyzer</title>
-  <meta name="description" content="Analyze MOWA direction survey exports and importance-performance gaps." />
+  <title>MOWA Questionnaire Results Analyzer</title>
+  <meta name="description" content="Analyze MOWA direction questionnaire exports and expectation-delivery gaps." />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body class="results-page">
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="MOWA Direction Survey home"><img src="assets/mowa-mark.svg" alt="MOWA Direction Survey" /></a>
+      <a class="brand" href="index.html" aria-label="MOWA Member Direction Questionnaire home"><img src="https://miowa.net/wp-content/uploads/2022/04/miowa-logo-544x180-1.png" onerror="this.onerror=null;this.src='assets/mowa-mark.svg';" alt="Michigan Outdoor Writers Association logo" /></a>
       <nav aria-label="Main navigation">
-        <a href="index.html#survey">Take survey</a>
+        <a href="index.html#survey">Take questionnaire</a>
         <a href="#analyzer">Analyze</a>
-        <a href="#matrix">Mission matrix</a>
+        <a href="#mission-fit">Mission fit</a>
       </nav>
     </div>
   </header>
@@ -25,11 +25,11 @@
         <div class="hero-copy">
           <p class="eyebrow">Local / exported analysis</p>
           <h1>Turn responses into board-ready evidence.</h1>
-          <p class="lead">Upload exported JSON, use responses saved in this browser, or paste JSON from Supabase. The analyzer calculates averages and importance-versus-performance gaps.</p>
+          <p class="lead">Upload exported JSON, use responses saved in this browser, or paste JSON from Supabase. The analyzer calculates averages and expectation-versus-delivery gaps.</p>
         </div>
         <div class="mini-dashboard" aria-hidden="true">
           <div class="dash-card"><span></span><strong>Importance</strong><em>4.6</em></div>
-          <div class="dash-card"><span></span><strong>Performance</strong><em>2.2</em></div>
+          <div class="dash-card"><span></span><strong>Delivery</strong><em>2.2</em></div>
           <div class="dash-card warn"><span></span><strong>Gap</strong><em>2.4</em></div>
         </div>
       </div>
@@ -41,7 +41,7 @@
           <div>
             <p class="eyebrow">Results analyzer</p>
             <h2>Load responses</h2>
-            <p>For real deployment, keep Supabase reads private. Export JSON from the Supabase dashboard, then analyze it here. Boring security beats exciting data leaks.</p>
+            <p>For deployment, keep Supabase reads private. Export JSON from the Supabase dashboard, then analyze it here. Boring security beats exciting data leaks.</p>
           </div>
         </div>
         <div class="load-panel">
@@ -56,9 +56,9 @@
         <div id="summaryCards" class="summary-cards"></div>
         <div class="table-wrap"><table id="gapTable"></table></div>
         <div class="table-wrap"><table id="scaleTable"></table></div>
-        <section id="matrix" class="matrix-panel">
-          <h2>Mission / bylaw comparison helper</h2>
-          <p>Use this grid after you have actual bylaws in hand. The analyzer fills the scores; the board fills the interpretation.</p>
+        <section id="mission-fit" class="mission-panel">
+          <h2>Mission fit summary</h2>
+          <p>This helper groups related survey fields so the board can discuss whether MOWA’s activities match the mission members recognize.</p>
           <div class="table-wrap"><table id="missionTable"></table></div>
         </section>
       </div>

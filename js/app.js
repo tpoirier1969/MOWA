@@ -1,26 +1,28 @@
 (() => {
-  const config = window.MOWA_SURVEY_CONFIG || {};
   const qdata = window.MOWA_QUESTIONNAIRE;
+  const config = window.MOWA_SURVEY_CONFIG || {};
   const form = document.getElementById('surveyForm');
   const tabs = document.getElementById('sectionTabs');
   const container = document.getElementById('sectionContainer');
+  const saveStatus = document.getElementById('saveStatus');
   const progressBar = document.getElementById('progressBar');
   const progressText = document.getElementById('progressText');
-  const saveStatus = document.getElementById('saveStatus');
-  const submitMessage = document.getElementById('submitMessage');
   const prevBtn = document.getElementById('prevSection');
   const nextBtn = document.getElementById('nextSection');
   const submitBtn = document.getElementById('submitSurvey');
   const saveDraftBtn = document.getElementById('saveDraft');
   const exportDraftBtn = document.getElementById('exportDraft');
-  const draftKey = 'mowa_direction_survey_draft_v1';
-  const submissionsKey = 'mowa_direction_survey_submissions_v1';
+  const draftKey = 'mowa_direction_survey_draft_v2';
+  const submissionsKey = 'mowa_direction_survey_submissions_v2';
   let activeIndex = 0;
   let draft = loadDraft();
 
   function loadDraft() {
-    try { return JSON.parse(localStorage.getItem(draftKey)) || {}; }
-    catch { return {}; }
+    try {
+      return JSON.parse(localStorage.getItem(draftKey)) || {};
+    } catch {
+      return {};
+    }
   }
 
   function saveDraft(manual = false) {
@@ -32,7 +34,7 @@
   }
 
   function allQuestions() {
-    return qdata.sections.flatMap(section => section.questions);
+    return qdata.sections.flatMap(section => section.questions).filter(q => q.type !== 'note');
   }
 
   function createTabs() {
@@ -52,31 +54,68 @@
     });
   }
 
+  function sectionNav(label = 'Continue') {
+    const wrap = document.createElement('div');
+    wrap.className = 'section-quick-actions';
+    const count = document.createElement('span');
+    count.textContent = `Part ${activeIndex + 1} of ${qdata.sections.length}`;
+
+    const prev = document.createElement('button');
+    prev.type = 'button';
+    prev.className = 'button secondary small-button';
+    prev.textContent = 'Back';
+    prev.disabled = activeIndex === 0;
+    prev.addEventListener('click', () => moveSection(-1));
+
+    const next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'button primary small-button';
+    next.textContent = activeIndex === qdata.sections.length - 1 ? 'Review and submit' : label;
+    next.addEventListener('click', () => {
+      if (activeIndex === qdata.sections.length - 1) {
+        form.requestSubmit();
+      } else {
+        moveSection(1);
+      }
+    });
+
+    wrap.append(count, prev, next);
+    return wrap;
+  }
+
   function renderSection() {
     const section = qdata.sections[activeIndex];
     container.innerHTML = '';
     const fieldset = document.createElement('fieldset');
     fieldset.className = 'survey-section';
     fieldset.innerHTML = `
-      <legend><span>${section.eyebrow}</span>${section.title}</legend>
-      <p class="section-intro">${section.intro}</p>
+      <legend><span>${escapeHtml(section.eyebrow)}</span>${escapeHtml(section.title)}</legend>
+      <p class="section-intro">${escapeHtml(section.intro)}</p>
     `;
+    fieldset.appendChild(sectionNav('Next'));
     section.questions.forEach(question => fieldset.appendChild(renderQuestion(question)));
+    fieldset.appendChild(sectionNav('Next'));
     container.appendChild(fieldset);
     prevBtn.disabled = activeIndex === 0;
     nextBtn.classList.toggle('hidden', activeIndex === qdata.sections.length - 1);
     submitBtn.classList.toggle('hidden', activeIndex !== qdata.sections.length - 1);
     createTabs();
     updateProgress();
-    window.scrollTo({ top: document.getElementById('survey').offsetTop - 80, behavior: 'smooth' });
+    window.scrollTo({ top: document.getElementById('survey').offsetTop - 72, behavior: 'smooth' });
   }
 
   function renderQuestion(question) {
     const wrapper = document.createElement('div');
     wrapper.className = `question question-${question.type}`;
+
+    if (question.type === 'note') {
+      wrapper.innerHTML = `<div class="note-inline">${escapeHtml(question.label)}</div>`;
+      return wrapper;
+    }
+
     const label = document.createElement('div');
     label.className = 'question-label';
-    label.innerHTML = `${question.label}${question.required ? '<span class="required"> Required</span>' : ''}`;
+    label.innerHTML = `${escapeHtml(question.label)}${question.required ? '<span class="required"> Required</span>' : ''}`;
     wrapper.appendChild(label);
 
     if (question.type === 'scale') {
@@ -87,7 +126,7 @@
     if (question.type === 'textarea') {
       const textarea = document.createElement('textarea');
       textarea.name = question.id;
-      textarea.rows = 4;
+      textarea.rows = 3;
       textarea.value = draft[question.id] || '';
       textarea.addEventListener('input', debounce(() => saveDraft(), 300));
       wrapper.appendChild(textarea);
@@ -135,7 +174,7 @@
     for (let i = 1; i <= 5; i++) {
       const label = document.createElement('label');
       label.className = 'scale-choice';
-      label.innerHTML = `<input type="radio" name="${question.id}" value="${i}" ${Number(draft[question.id]) === i ? 'checked' : ''}><span>${i}</span><small>${labels[i - 1]}</small>`;
+      label.innerHTML = `<input type="radio" name="${question.id}" value="${i}" ${Number(draft[question.id]) === i ? 'checked' : ''}><span>${i}</span><small>${escapeHtml(labels[i - 1])}</small>`;
       label.querySelector('input').addEventListener('change', () => saveDraft());
       scale.appendChild(label);
     }
@@ -224,7 +263,7 @@
     submitMessage.innerHTML = `
       <h3>Response saved.</h3>
       <p>${supabaseResult.skipped ? 'Saved locally in this browser. Supabase is not configured yet.' : 'Saved locally and sent to Supabase.'}</p>
-      <div class="table-wrap"><table><thead><tr><th>Largest personal gaps in this response</th><th>Importance</th><th>Performance</th><th>Gap</th></tr></thead><tbody>${rows || '<tr><td colspan="4">No gap scores available yet.</td></tr>'}</tbody></table></div>
+      <div class="table-wrap"><table><thead><tr><th>Largest personal gaps in this response</th><th>Importance</th><th>Delivery</th><th>Gap</th></tr></thead><tbody>${rows || '<tr><td colspan="4">No gap scores available yet.</td></tr>'}</tbody></table></div>
       <p><a href="results.html">Open the results analyzer</a> to combine responses.</p>
     `;
   }
@@ -241,18 +280,14 @@
     };
   }
 
-  prevBtn.addEventListener('click', () => {
+  function moveSection(delta) {
     saveDraft();
-    activeIndex = Math.max(0, activeIndex - 1);
+    activeIndex = Math.max(0, Math.min(qdata.sections.length - 1, activeIndex + delta));
     renderSection();
-  });
+  }
 
-  nextBtn.addEventListener('click', () => {
-    saveDraft();
-    activeIndex = Math.min(qdata.sections.length - 1, activeIndex + 1);
-    renderSection();
-  });
-
+  prevBtn.addEventListener('click', () => moveSection(-1));
+  nextBtn.addEventListener('click', () => moveSection(1));
   saveDraftBtn.addEventListener('click', () => saveDraft(true));
 
   exportDraftBtn.addEventListener('click', () => {
@@ -266,7 +301,7 @@
     const payload = collectData();
     const record = {
       created_at: new Date().toISOString(),
-      survey_version: config.surveyVersion || 'mowa-direction-survey-v1',
+      survey_version: config.surveyVersion || 'mowa-direction-survey-v2',
       respondent_type: payload.role || null,
       member_duration: payload.mowa_years || null,
       creator_types: Array.isArray(payload.creator_types) ? payload.creator_types : [],

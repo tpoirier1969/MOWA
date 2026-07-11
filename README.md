@@ -1,15 +1,17 @@
-# MOWA Direction Survey Site
+# MOWA Member Direction Questionnaire Site
 
 A simple static website for a MOWA member/board direction questionnaire. It is designed for GitHub Pages and optional Supabase storage.
 
 ## What this includes
 
-- `index.html` — official-looking survey landing page and full questionnaire.
-- `results.html` — local/exported response analyzer with importance-versus-performance gap scoring.
+- `index.html` — official-looking landing page and full questionnaire.
+- `results.html` — local/exported response analyzer with importance-versus-delivery gap scoring.
 - `js/questions.js` — editable questionnaire content.
 - `js/config.js` — optional Supabase configuration.
 - `supabase/schema.sql` — safe-by-default Supabase table setup.
-- `assets/` — custom placeholder/logo-style SVG artwork. These are not the official MOWA logo.
+- `assets/` — fallback SVG artwork if the official MOWA logo URL cannot load.
+
+The header and hero use the official MOWA logo from the public MOWA website. If you want the site to be fully self-contained, download that logo with permission and replace the external image URLs with a local file in `assets/`.
 
 ## Designed to play nice
 
@@ -25,7 +27,7 @@ This package does not assume it owns your GitHub account or Supabase account.
 
 ## GitHub Pages setup
 
-1. Create a new repository, for example: `mowa-direction-survey`.
+1. Create a new repository, for example: `mowa-direction-questionnaire`.
 2. Upload the contents of this folder to the repository.
 3. In GitHub, go to **Settings → Pages**.
 4. Set source to the `main` branch and root folder.
@@ -43,7 +45,7 @@ This package does not assume it owns your GitHub account or Supabase account.
 
 ```js
 window.MOWA_SURVEY_CONFIG = {
-  surveyVersion: "mowa-direction-survey-v1",
+  surveyVersion: "mowa-direction-survey-v2",
   supabaseUrl: "https://YOUR-PROJECT.supabase.co",
   supabaseAnonKey: "YOUR_ANON_PUBLIC_KEY",
   tableName: "mowa_direction_survey_responses",
@@ -63,7 +65,7 @@ window.MOWA_SURVEY_CONFIG = {
 
 ## Editing the questionnaire
 
-Most content lives in `js/questions.js`. Questions have IDs, labels, types, and options. Keep IDs stable once responses are collected, or old data will be harder to analyze.
+Most content lives in `js/questions.js`. Questions have IDs, labels, types, and options. Keep IDs stable once responses are collected, or older data will be harder to analyze.
 
 Question types supported:
 
@@ -72,12 +74,13 @@ Question types supported:
 - `scale`
 - `textarea`
 - `text`
+- `note`
 
 ## Before public launch
 
 Do these before sending the link to members:
 
-1. Replace placeholder SVG art with approved MOWA logo/images if available.
+1. Confirm the official logo can be used in this context.
 2. Have the board approve the intro language.
 3. Confirm whether responses should be anonymous.
 4. Decide who exports/analyzes Supabase data.
@@ -86,8 +89,8 @@ Do these before sending the link to members:
 
 ## Suggested board framing
 
-This is not a referendum on any one change. It is a mission-alignment tool. The main output is a gap analysis:
+This is not a referendum on any one change. It is a member-expectation tool. The main output is a gap analysis:
 
-`Importance average - Current performance average = Strategic gap`
+`Importance average - Delivery average = Strategic gap`
 
-Large gaps show where members believe MOWA is important but underperforming.
+Large gaps show where members believe an area matters but MOWA may not be delivering strongly enough yet.
