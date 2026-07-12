@@ -13,8 +13,8 @@
   const dialogContent = document.getElementById('dialogContent');
   const closeDialog = document.getElementById('closeDialog');
 
-  const draftKey = 'mowa_direction_survey_draft_v5_2';
-  const legacyKeys = ['mowa_direction_survey_draft_v5', 'mowa_direction_survey_draft_v4', 'mowa_direction_survey_draft_v3'];
+  const draftKey = 'mowa_direction_survey_draft_v5_3';
+  const legacyKeys = ['mowa_direction_survey_draft_v5_2', 'mowa_direction_survey_draft_v5', 'mowa_direction_survey_draft_v4', 'mowa_direction_survey_draft_v3'];
   const allScreens = [
     ...data.introScreens.map((screen) => ({ ...screen, screenType: 'intro' })),
     ...data.pages.map((page) => ({ ...page, screenType: 'survey' }))
@@ -54,7 +54,7 @@
         answers,
         pageIndex: currentIndex >= firstSurveyIndex ? currentIndex : lastSurveyIndex,
         updatedAt: new Date().toISOString(),
-        surveyVersion: config.surveyVersion || 'mowa-direction-survey-v5.2'
+        surveyVersion: config.surveyVersion || 'mowa-direction-survey-v5.4'
       };
       try {
         localStorage.setItem(draftKey, JSON.stringify(payload));
@@ -116,6 +116,8 @@
     element.dataset.index = String(index);
     const inner = document.createElement('div');
     inner.className = 'screen-inner';
+    const content = document.createElement('div');
+    content.className = 'screen-content intro-content';
 
     if (screen.id === 'welcome') {
       const copy = document.createElement('div');
@@ -138,12 +140,12 @@
         links.appendChild(a);
       });
       copy.appendChild(links);
-      inner.appendChild(copy);
+      content.appendChild(copy);
 
       const figure = document.createElement('figure');
       figure.className = 'hero-image';
       figure.innerHTML = `<img src="${escapeAttribute(screen.image)}" alt="${escapeAttribute(screen.imageAlt)}">`;
-      inner.appendChild(figure);
+      content.appendChild(figure);
 
       const extras = [];
       if (hasSavedAnswers()) {
@@ -161,17 +163,18 @@
           }
         });
         notice.appendChild(startOver);
-        inner.appendChild(notice);
+        content.appendChild(notice);
         extras.push(makeButton('Continue saved questionnaire', 'secondary', () => goTo(lastSurveyIndex, 1)));
       }
       extras.push(makeButton(screen.secondaryLabel, 'secondary', () => goTo(firstSurveyIndex, 1)));
+      inner.appendChild(content);
       inner.appendChild(createNavigation({
         extraButtons: extras,
         nextIndex: 1,
         nextLabel: screen.primaryLabel
       }));
     } else {
-      inner.innerHTML = `<p class="kicker">${escapeHtml(screen.kicker)}</p><h1>${escapeHtml(screen.title)}</h1>`;
+      content.innerHTML = `<p class="kicker">${escapeHtml(screen.kicker)}</p><h1>${escapeHtml(screen.title)}</h1>`;
       const list = document.createElement('ol');
       list.className = 'how-list';
       screen.bullets.forEach((bullet, i) => {
@@ -180,11 +183,12 @@
         li.innerHTML = `<span class="how-number">0${i + 1}</span><p>${escapeHtml(bullet)}</p>`;
         list.appendChild(li);
       });
-      inner.appendChild(list);
+      content.appendChild(list);
       const footer = document.createElement('p');
       footer.className = 'how-footer';
       footer.textContent = screen.footer;
-      inner.appendChild(footer);
+      content.appendChild(footer);
+      inner.appendChild(content);
       inner.appendChild(createNavigation({ backIndex: 0, nextIndex: firstSurveyIndex, nextLabel: screen.primaryLabel }));
     }
 
@@ -209,16 +213,18 @@
     `;
     inner.appendChild(heading);
 
+    const content = document.createElement('div');
+    content.className = 'screen-content survey-content';
     if (page.note) {
       const note = document.createElement('p');
       note.className = 'page-note';
       note.textContent = page.note;
-      inner.appendChild(note);
+      content.appendChild(note);
     }
-
-    if (page.awardCategories) inner.appendChild(renderAwardPanel(page.awardCategories));
-    if (page.items) inner.appendChild(renderRatings(page));
-    if (page.fields) inner.appendChild(renderFields(page.fields));
+    if (page.awardCategories) content.appendChild(renderAwardPanel(page.awardCategories));
+    if (page.items) content.appendChild(renderRatings(page));
+    if (page.fields) content.appendChild(renderFields(page.fields));
+    inner.appendChild(content);
 
     const isLast = index === allScreens.length - 1;
     inner.appendChild(createNavigation({
@@ -249,6 +255,17 @@
     const list = document.createElement('div');
     list.className = 'rating-list';
     const labels = data.scales[page.matrixScale] || [];
+
+    const key = document.createElement('div');
+    key.className = 'scale-key';
+    key.setAttribute('aria-label', 'Rating scale');
+    labels.forEach((word, i) => {
+      const item = document.createElement('div');
+      item.innerHTML = `<strong>${i + 1}</strong><span>${escapeHtml(word)}</span>`;
+      key.appendChild(item);
+    });
+    list.appendChild(key);
+
     page.items.forEach((item) => {
       const block = document.createElement('div');
       block.className = 'rating-question';
@@ -262,17 +279,17 @@
       labels.forEach((word, i) => {
         const choice = document.createElement('label');
         choice.className = 'score-choice';
+        choice.title = `${i + 1} — ${word}`;
         const input = document.createElement('input');
         input.type = 'radio';
         input.name = item.id;
         input.value = String(i + 1);
+        input.setAttribute('aria-label', `${i + 1} — ${word}`);
         input.checked = String(answers[item.id] || '') === String(i + 1);
         input.addEventListener('change', () => updateAnswer(item.id, Number(input.value)));
         const number = document.createElement('strong');
         number.textContent = String(i + 1);
-        const text = document.createElement('span');
-        text.textContent = word;
-        choice.append(input, number, text);
+        choice.append(input, number);
         options.appendChild(choice);
       });
       block.appendChild(options);
@@ -325,8 +342,11 @@
           input.value = option;
           input.checked = selected.includes(option);
           input.addEventListener('change', () => {
-            const values = [...options.querySelectorAll('input:checked')].map((node) => node.value);
-            updateAnswer(field.id, values);
+            const visibleValues = new Set(field.options);
+            const checkedHere = [...options.querySelectorAll('input:checked')].map((node) => node.value);
+            const existing = Array.isArray(answers[field.id]) ? answers[field.id] : [];
+            const preserved = field.partialOptions ? existing.filter((value) => !visibleValues.has(value)) : [];
+            updateAnswer(field.id, [...preserved, ...checkedHere]);
           });
           choice.append(input, document.createTextNode(option));
           options.appendChild(choice);
@@ -464,10 +484,11 @@
     );
     const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
     const row = {
-      survey_version: config.surveyVersion || 'mowa-direction-survey-v5.2',
+      survey_version: config.surveyVersion || 'mowa-direction-survey-v5.4',
       respondent_type: answers.role || null,
       member_duration: answers.mowa_years || null,
       creator_types: Array.isArray(answers.creator_types) ? answers.creator_types : [],
+      distribution_channels: Array.isArray(answers.distribution_channels) ? answers.distribution_channels : [],
       age_range: answers.age_range || null,
       gender: answers.gender || null,
       contact_provided: Boolean((answers.contact_name || '').trim() || (answers.contact_email || '').trim()),

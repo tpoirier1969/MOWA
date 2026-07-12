@@ -10,7 +10,7 @@
 - [ ] Confirm the page visibly slides left when moving forward and right when moving backward.
 - [ ] Confirm Back and Next buttons appear centered beneath the page content.
 - [ ] Confirm the section strip wraps and never scrolls sideways.
-- [ ] Confirm no questionnaire page scrolls at the target monitor sizes.
+- [ ] Confirm no questionnaire page scrolls at 1024×768 or larger under normal browser zoom.
 
 ## Supabase
 
@@ -30,13 +30,16 @@
 - [ ] Confirm the first page offers to continue the saved questionnaire.
 - [ ] Confirm “Start over” clears only this questionnaire’s local draft.
 - [ ] Confirm a successful submission clears the local draft.
-- [ ] Test at 1366×768, 1280×720, and a narrower browser window.
+- [ ] Test at 1366×768, 1024×768, 390×844, and 360×640.
+- [ ] On phones, confirm long pages scroll only inside the content area and Back/Next remain fixed and visible.
+- [ ] Confirm there is no horizontal scrolling at phone widths.
 
 ## Content approval
 
 - [ ] Approve use of the MOWA name and logo.
 - [ ] Approve the multigenerational hero image.
 - [ ] Approve the introduction and questionnaire wording.
+- [ ] Approve the optional questions about outlets, publications/programs/channels, direct sales, and outdoor-related businesses.
 - [ ] Obtain or approve the best available bylaws link.
 - [ ] Approve the automatic-save and optional-contact wording.
 - [ ] Decide whether optional age and gender questions remain included.

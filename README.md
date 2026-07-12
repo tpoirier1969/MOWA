@@ -12,12 +12,13 @@ A self-contained static questionnaire site for the Michigan Outdoor Writers Asso
 - Related questions grouped onto short pages rather than shown one at a time.
 - Complete-sentence questions with compact 1–5 answer rows.
 - Larger body text and question wording for an audience that may not be especially comfortable with web applications.
-- Back and Next buttons centered directly below each page’s content.
-- A compact section strip that wraps rather than scrolling sideways.
+- Back and Next buttons centered in the same fixed location beneath the content on every screen.
+- A compact section strip on desktop and a simpler current-section label on phones.
 - Automatic draft saving in that browser on that computer.
 - A resume option when a saved questionnaire is found.
 - Optional name and email fields only for respondents who want follow-up or involvement opportunities.
 - MOWA’s listed Excellence in Craft award categories displayed prominently.
+- A new “Where Your Work Reaches People” section covering media outlets, named publications/programs/channels, independent publishing, client/employer work, direct sales, and outdoor-related businesses.
 - A Submit button only on the final page. There are no questionnaire Save or Export buttons.
 - Supabase submission through one namespaced table: `mowa_direction_survey_responses`.
 - `results.html` remains a separate private/local analysis utility and is not linked from the questionnaire.
@@ -32,6 +33,7 @@ A self-contained static questionnaire site for the Michigan Outdoor Writers Asso
 - `supabase/schema.sql` — safe-by-default Supabase table and row-level-security setup.
 - `assets/mowa-logo.webp` — local copy of the logo served by the public MOWA website.
 - `assets/mentorship-hero.png` — landing-page artwork.
+- `docs/mowa-bylaws-revised-2026.pdf` — the approved bylaws supplied for this questionnaire, linked from the first screen.
 - `results.html` and `js/results.js` — optional private/local results analyzer.
 
 ## Designed to play nice
@@ -64,16 +66,16 @@ This package does not assume it owns your GitHub or Supabase account.
 
 ```js
 window.MOWA_SURVEY_CONFIG = {
-  surveyVersion: "mowa-direction-survey-v5.2",
+  surveyVersion: "mowa-direction-survey-v5.4",
   supabaseUrl: "https://YOUR-PROJECT.supabase.co",
   supabaseAnonKey: "YOUR_ANON_PUBLIC_KEY",
   tableName: "mowa_direction_survey_responses",
   officialSiteUrl: "https://miowa.net/",
-  bylawsOrPrinciplesUrl: "https://miowa.net/about-us/"
+  bylawsOrPrinciplesUrl: "docs/mowa-bylaws-revised-2026.pdf"
 };
 ```
 
-The public MOWA site does not appear to expose a full bylaws document. The first screen therefore links to the public About page, which summarizes the organization’s bylaws and principles. Replace that link when an approved direct bylaws URL is available.
+The package includes the bylaws supplied for this project at `docs/mowa-bylaws-revised-2026.pdf`. The first screen links directly to that local copy, so the link will continue to work when the site is hosted on GitHub Pages.
 
 ## How responses work
 
@@ -85,27 +87,28 @@ The public MOWA site does not appear to expose a full bylaws document. The first
 
 ## Display behavior
 
-The questionnaire was checked screen-by-screen without vertical or horizontal overflow at:
+The questionnaire was checked screen-by-screen at **1024 × 768** with no page or document scrolling. Pages within a section were combined where the combined content still fit cleanly at that size.
 
-- 1366 × 768
-- 1280 × 720
-- 1024 × 768
-- 640 × 800
+The phone layout was checked at **390 × 844** and **360 × 640**. It remains single-column with no horizontal overflow. On shorter phone screens, only the content area scrolls when needed; the section label and Back/Next controls remain in place.
 
-The layout uses the available width but remains single-column. Browser zoom, unusually large accessibility text settings, or very short windows may still require additional adjustments before launch.
+Browser zoom, unusually large accessibility text settings, or exceptionally short windows may require additional scrolling.
 
 ## Before public launch
 
 1. Confirm approval to use the MOWA name, logo, and hero artwork.
-2. Replace the public principles-summary link if MOWA provides a direct bylaws document.
 3. Approve the introduction, questionnaire wording, and optional demographic questions.
 4. Configure Supabase in the intended project—not whichever project happens to be open.
 5. Submit several test responses and confirm they appear only in `mowa_direction_survey_responses`.
 6. Test closing and reopening the questionnaire to confirm same-computer draft recovery.
 7. Delete test rows before launch.
 
-## Revision 5.2 notes
+## Revision 5.4 notes
 
-- Separates social/member activities from learning and skill-building opportunities in the member-experience questions.
+- Adds the full MOWA bylaws revised June 12, 2026 as a locally hosted PDF linked from the first screen.
+- Replaces the older public-summary wording with the three stated goals and freedom-of-expression principle from Section 2 of the bylaws.
+- Adds a “Where Your Work Reaches People” section covering magazines, newspapers, books, broadcast, web, podcasting, video, social media, employer/client work, direct sales, and outdoor-related businesses.
+- Adds optional fields for naming specific publications, programs, channels, organizations, or businesses.
+- Combines related pages where the combined page fits without scrolling at 1024 × 768.
 - Keeps Back and Next controls in a consistent centered position beneath the main content on every screen.
+- Adds a true phone layout with fixed navigation and internal content scrolling only when necessary.
 
