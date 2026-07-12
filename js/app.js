@@ -13,8 +13,8 @@
   const dialogContent = document.getElementById('dialogContent');
   const closeDialog = document.getElementById('closeDialog');
 
-  const draftKey = 'mowa_direction_survey_draft_v5_3';
-  const legacyKeys = ['mowa_direction_survey_draft_v5_2', 'mowa_direction_survey_draft_v5', 'mowa_direction_survey_draft_v4', 'mowa_direction_survey_draft_v3'];
+  const draftKey = 'mowa_direction_survey_draft_v5_5';
+  const legacyKeys = ['mowa_direction_survey_draft_v5_3', 'mowa_direction_survey_draft_v5_2', 'mowa_direction_survey_draft_v5', 'mowa_direction_survey_draft_v4', 'mowa_direction_survey_draft_v3'];
   const allScreens = [
     ...data.introScreens.map((screen) => ({ ...screen, screenType: 'intro' })),
     ...data.pages.map((page) => ({ ...page, screenType: 'survey' }))
@@ -54,7 +54,7 @@
         answers,
         pageIndex: currentIndex >= firstSurveyIndex ? currentIndex : lastSurveyIndex,
         updatedAt: new Date().toISOString(),
-        surveyVersion: config.surveyVersion || 'mowa-direction-survey-v5.4'
+        surveyVersion: config.surveyVersion || 'mowa-direction-survey-v5.5'
       };
       try {
         localStorage.setItem(draftKey, JSON.stringify(payload));
@@ -388,9 +388,9 @@
   function renderInitial(index = 0) {
     currentIndex = clamp(index, 0, allScreens.length - 1);
     if (currentIndex >= firstSurveyIndex) lastSurveyIndex = currentIndex;
-    host.innerHTML = '';
     const screen = createScreen(currentIndex);
-    host.appendChild(screen);
+    screen.classList.add('is-active');
+    host.replaceChildren(screen);
     updateProgressUI();
   }
 
@@ -399,27 +399,22 @@
     const target = clamp(index, 0, allScreens.length - 1);
     if (target === currentIndex) return;
 
-    transitioning = true;
-    const outgoing = host.querySelector('.screen');
-    const incoming = createScreen(target);
-    const forward = direction >= 0;
-    incoming.classList.add(forward ? 'enter-right' : 'enter-left');
-    host.appendChild(incoming);
-
-    // Force the browser to paint the starting position before transitioning.
-    void incoming.offsetWidth;
-    requestAnimationFrame(() => {
-      outgoing.classList.add(forward ? 'exit-left' : 'exit-right');
-      incoming.classList.remove(forward ? 'enter-right' : 'enter-left');
+    // Clean up any stale screen left by an interrupted older transition before starting.
+    const existingScreens = [...host.querySelectorAll('.screen')];
+    const outgoing = existingScreens.find((screen) => screen.classList.contains('is-active')) || existingScreens.at(-1) || null;
+    existingScreens.forEach((screen) => {
+      if (screen !== outgoing) screen.remove();
     });
 
-    const finish = () => {
-      outgoing.remove();
-      incoming.removeEventListener('transitionend', finish);
-      transitioning = false;
-    };
-    incoming.addEventListener('transitionend', finish);
-    setTimeout(finish, slideMs + 120);
+    const incoming = createScreen(target);
+    const forward = direction >= 0;
+    const travel = forward ? 100 : -100;
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    transitioning = true;
+    incoming.setAttribute('aria-hidden', 'false');
+    if (outgoing) outgoing.setAttribute('aria-hidden', 'true');
+    host.appendChild(incoming);
 
     currentIndex = target;
     if (currentIndex >= firstSurveyIndex) {
@@ -427,6 +422,55 @@
       persistDraft(true);
     }
     updateProgressUI();
+
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      for (const animation of incoming.getAnimations()) animation.cancel();
+      if (outgoing) {
+        for (const animation of outgoing.getAnimations()) animation.cancel();
+      }
+      incoming.classList.add('is-active');
+      incoming.removeAttribute('aria-hidden');
+      incoming.removeAttribute('style');
+      host.replaceChildren(incoming);
+      transitioning = false;
+    };
+
+    if (!outgoing || reducedMotion || typeof incoming.animate !== 'function') {
+      finish();
+      return;
+    }
+
+    outgoing.classList.remove('is-active');
+    outgoing.style.zIndex = '1';
+    outgoing.style.pointerEvents = 'none';
+    incoming.style.zIndex = '2';
+    incoming.style.pointerEvents = 'none';
+
+    const timing = {
+      duration: slideMs,
+      easing: 'cubic-bezier(.40, 0, .18, 1)',
+      fill: 'both'
+    };
+
+    try {
+      const outgoingAnimation = outgoing.animate([
+        { transform: 'translate3d(0, 0, 0)' },
+        { transform: `translate3d(${-travel}%, 0, 0)` }
+      ], timing);
+      const incomingAnimation = incoming.animate([
+        { transform: `translate3d(${travel}%, 0, 0)` },
+        { transform: 'translate3d(0, 0, 0)' }
+      ], timing);
+
+      Promise.allSettled([outgoingAnimation.finished, incomingAnimation.finished]).then(finish);
+      // Guaranteed cleanup if the browser drops an animation-finished event.
+      window.setTimeout(finish, slideMs + 180);
+    } catch (_) {
+      finish();
+    }
   }
 
   function updateProgressUI() {
@@ -484,7 +528,7 @@
     );
     const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
     const row = {
-      survey_version: config.surveyVersion || 'mowa-direction-survey-v5.4',
+      survey_version: config.surveyVersion || 'mowa-direction-survey-v5.5',
       respondent_type: answers.role || null,
       member_duration: answers.mowa_years || null,
       creator_types: Array.isArray(answers.creator_types) ? answers.creator_types : [],

@@ -1,4 +1,4 @@
--- MOWA Direction Survey v5.4
+-- MOWA Direction Survey v5.5
 -- Safe-by-default Supabase setup: one namespaced table, anonymous INSERT only, no public SELECT.
 -- Run this in the Supabase SQL editor for the Supabase project you choose.
 
@@ -7,7 +7,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.mowa_direction_survey_responses (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
-  survey_version text not null default 'mowa-direction-survey-v5.4',
+  survey_version text not null default 'mowa-direction-survey-v5.5',
   respondent_type text,
   member_duration text,
   creator_types text[] default '{}',
@@ -31,7 +31,7 @@ alter table public.mowa_direction_survey_responses
   add column if not exists distribution_channels text[] default '{}';
 
 alter table public.mowa_direction_survey_responses
-  alter column survey_version set default 'mowa-direction-survey-v5.4';
+  alter column survey_version set default 'mowa-direction-survey-v5.5';
 
 alter table public.mowa_direction_survey_responses enable row level security;
 
@@ -41,8 +41,9 @@ drop policy if exists "mowa_direction_survey_insert_anon_v4" on public.mowa_dire
 drop policy if exists "mowa_direction_survey_insert_anon_v5" on public.mowa_direction_survey_responses;
 drop policy if exists "mowa_direction_survey_insert_anon_v5_2" on public.mowa_direction_survey_responses;
 drop policy if exists "mowa_direction_survey_insert_anon_v5_3" on public.mowa_direction_survey_responses;
+drop policy if exists "mowa_direction_survey_insert_anon_v5_5" on public.mowa_direction_survey_responses;
 
-create policy "mowa_direction_survey_insert_anon_v5_3"
+create policy "mowa_direction_survey_insert_anon_v5_5"
   on public.mowa_direction_survey_responses
   for insert
   to anon

@@ -66,7 +66,7 @@ This package does not assume it owns your GitHub or Supabase account.
 
 ```js
 window.MOWA_SURVEY_CONFIG = {
-  surveyVersion: "mowa-direction-survey-v5.4",
+  surveyVersion: "mowa-direction-survey-v5.5",
   supabaseUrl: "https://YOUR-PROJECT.supabase.co",
   supabaseAnonKey: "YOUR_ANON_PUBLIC_KEY",
   tableName: "mowa_direction_survey_responses",
@@ -112,3 +112,12 @@ Browser zoom, unusually large accessibility text settings, or exceptionally shor
 - Keeps Back and Next controls in a consistent centered position beneath the main content on every screen.
 - Adds a true phone layout with fixed navigation and internal content scrolling only when necessary.
 
+
+
+## v5.5 fixes
+
+- Adds a persistent Bylaws link in the header. The included PDF opens in a new browser tab.
+- Replaces the earlier transition logic with a guarded left/right page animation that always removes the outgoing page.
+- Makes every questionnaire screen fully opaque so pages cannot show through one another.
+- Cleans up stale screens before each transition and blocks rapid repeat navigation while a transition is running.
+- Adds restrained brook-trout green, orange, gold, and red accents drawn from the MOWA logo.
