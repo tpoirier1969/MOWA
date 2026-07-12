@@ -1,0 +1,141 @@
+/* Mobile viewport and navigation repair
+   Keeps questionnaire controls visible in iPhone Safari and other narrow browsers. */
+
+@supports (height: 100svh) {
+  .survey-app {
+    height: 100svh;
+  }
+}
+
+@supports (height: 100dvh) {
+  .survey-app {
+    height: 100dvh;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --mobile-nav-height: 82px;
+  }
+
+  html,
+  body,
+  .survey-app {
+    min-height: 100svh;
+    max-height: 100svh;
+    overflow: hidden;
+  }
+
+  @supports (height: 100dvh) {
+    html,
+    body,
+    .survey-app {
+      min-height: 100dvh;
+      max-height: 100dvh;
+    }
+  }
+
+  .app-main,
+  .screen-host {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .screen {
+    padding: 12px 12px 0;
+    overflow: hidden;
+  }
+
+  .screen-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    padding-bottom: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .screen-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 0 4px 18px 0;
+  }
+
+  .screen-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    min-height: var(--mobile-nav-height);
+    padding: 11px 13px calc(13px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(24, 63, 49, .24);
+    background:
+      linear-gradient(180deg, rgba(255, 250, 240, .93), rgba(247, 241, 228, .98));
+    box-shadow: 0 -12px 30px rgba(15, 47, 37, .14);
+  }
+
+  .screen-nav .button {
+    flex: 1 1 0;
+    max-width: 220px;
+    min-width: 0;
+    min-height: 46px;
+    padding: 8px 10px;
+    font-size: .92rem;
+  }
+
+  .welcome-screen .screen-nav .button {
+    flex: 1 1 0;
+  }
+
+  .hero-image {
+    height: clamp(128px, 21svh, 176px);
+    margin-top: 10px;
+  }
+
+  @supports (height: 100dvh) {
+    .hero-image {
+      height: clamp(128px, 21dvh, 176px);
+    }
+  }
+
+  .welcome-copy p:not(.kicker) {
+    margin: 5px 0;
+  }
+
+  .source-links {
+    gap: 3px;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --mobile-nav-height: 78px;
+  }
+
+  .app-header {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .brand-button img {
+    width: min(168px, 47vw);
+  }
+
+  .hero-image {
+    height: clamp(118px, 19svh, 154px);
+  }
+
+  @supports (height: 100dvh) {
+    .hero-image {
+      height: clamp(118px, 19dvh, 154px);
+    }
+  }
+}
