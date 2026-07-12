@@ -53,7 +53,7 @@ window.MOWA_QUESTIONNAIRE = {
     {
       id: "about-1",
       section: "about",
-      part: "1 of 2",
+      part: "1 of 3",
       title: "About you",
       intro: "These questions help separate board, longtime member, newer member, student, supporter, and prospective-member perspectives.",
       fields: [
@@ -65,11 +65,20 @@ window.MOWA_QUESTIONNAIRE = {
     {
       id: "about-2",
       section: "about",
-      part: "2 of 2",
-      title: "About you",
-      intro: "Communication format and demographic questions help show whether different groups have different experiences or priorities.",
+      part: "2 of 3",
+      title: "About your outdoor communication",
+      intro: "Select every kind of outdoor communication that applies to you.",
       fields: [
-        { id: "creator_types", type: "checkbox", label: "Which kinds of outdoor communication do you do? Select all that apply.", options: ["Writing / journalism", "Photography", "Video / filmmaking", "Podcasting / audio", "Radio / television", "Blogging / websites", "Social media / digital content", "Books", "Public relations / communications", "Conservation / nonprofit communication", "Tourism / destination communication", "Outdoor education", "I do not produce outdoor communication", "Other"] },
+        { id: "creator_types", type: "checkbox", label: "Which kinds of outdoor communication do you do? Select all that apply.", options: ["Writing / journalism", "Photography", "Video / filmmaking", "Podcasting / audio", "Radio / television", "Blogging / websites", "Social media / digital content", "Books", "Public relations / communications", "Conservation / nonprofit communication", "Tourism / destination communication", "Outdoor education", "I do not produce outdoor communication", "Other"] }
+      ]
+    },
+    {
+      id: "about-3",
+      section: "about",
+      part: "3 of 3",
+      title: "Optional background information",
+      intro: "These optional questions help show whether different groups have different experiences or priorities.",
+      fields: [
         { id: "age_range", type: "radio", label: "Optional: What age range are you in?", options: ["Under 25", "25–34", "35–44", "45–54", "55–64", "65–74", "75+", "Prefer not to answer"] },
         { id: "gender", type: "radio", label: "Optional: How do you describe your gender?", options: ["Woman", "Man", "Nonbinary", "Prefer to self-describe", "Prefer not to answer"] }
       ]
@@ -77,7 +86,7 @@ window.MOWA_QUESTIONNAIRE = {
     {
       id: "experience-1",
       section: "experience",
-      part: "1 of 2",
+      part: "1 of 3",
       title: "Your MOWA experience",
       intro: "Please rate how well the following statements match your own experience with MOWA.",
       matrixScale: "expectation",
@@ -92,12 +101,21 @@ window.MOWA_QUESTIONNAIRE = {
     {
       id: "experience-2",
       section: "experience",
-      part: "2 of 2",
+      part: "2 of 3",
       title: "Your MOWA experience",
       intro: "These short written answers help explain the ratings.",
       fields: [
         { id: "join_expectations", type: "textarea", rows: 2, label: "When you joined MOWA, or when you first considered joining, what did you hope MOWA would do for you?" },
-        { id: "expectations_best_met", type: "textarea", rows: 2, label: "Where has MOWA been most useful to you?" },
+        { id: "expectations_best_met", type: "textarea", rows: 2, label: "Where has MOWA been most useful to you?" }
+      ]
+    },
+    {
+      id: "experience-3",
+      section: "experience",
+      part: "3 of 3",
+      title: "Your MOWA experience",
+      intro: "Please describe where MOWA could be more useful.",
+      fields: [
         { id: "expectations_shortfall", type: "textarea", rows: 2, label: "Where has MOWA fallen short of what you hoped for?" },
         { id: "more_for_members", type: "textarea", rows: 2, label: "Is there more MOWA should be doing for you or for members like you?" }
       ]
@@ -203,14 +221,31 @@ window.MOWA_QUESTIONNAIRE = {
     {
       id: "awards-1",
       section: "awards",
-      part: "1 of 1",
+      part: "1 of 2",
       title: "Awards and recognition",
-      intro: "MOWA’s listed Excellence in Craft categories include Best Outdoor Feature, News Related Articles, Photography, Broadcast Media, Outdoor Activities, and Outdoor Column.",
-      note: "This section asks whether those categories and related recognition still reflect the kinds of outdoor communication MOWA should encourage.",
+      intro: "Please consider the award categories listed below before answering the questions.",
+      awardCategories: [
+        { name: "Cliff Ketcham Award", description: "Best Outdoor Feature" },
+        { name: "C.A. “Frenchy” Paquin Award", description: "News Related Articles" },
+        { name: "Charlie Welch Award", description: "Photography" },
+        { name: "Mort Neff Award", description: "Broadcast Media" },
+        { name: "James H. Hall Award", description: "Outdoor Activities" },
+        { name: "James A. O. Crowe Award", description: "Best Outdoor Column" }
+      ],
       matrixScale: "performance",
       items: [
         { id: "awards_reflect_work", label: "The listed award categories reflect the range of work MOWA members create." },
-        { id: "awards_support_growth", label: "The awards help encourage stronger work and professional growth." },
+        { id: "awards_support_growth", label: "The awards help encourage stronger work and professional growth." }
+      ]
+    },
+    {
+      id: "awards-2",
+      section: "awards",
+      part: "2 of 2",
+      title: "Awards and recognition",
+      intro: "Please consider whether the awards represent newer formats and developing communicators.",
+      matrixScale: "performance",
+      items: [
         { id: "awards_welcome_new_formats", label: "Video, podcasting, websites, newsletters, and other digital work are represented well enough." },
         { id: "awards_recognize_new_voices", label: "Student, apprentice, or emerging-creator work is recognized clearly enough." }
       ],
@@ -273,7 +308,7 @@ window.MOWA_QUESTIONNAIRE = {
     {
       id: "final-1",
       section: "final",
-      part: "1 of 2",
+      part: "1 of 3",
       title: "Overall direction",
       intro: "Please rate how strongly you agree or disagree with these statements.",
       matrixScale: "readiness",
@@ -282,16 +317,23 @@ window.MOWA_QUESTIONNAIRE = {
         { id: "urgency_relevance", label: "MOWA should pay attention to how outdoor communication is changing." },
         { id: "urgency_preserve_and_update", label: "MOWA can preserve what matters while updating how it serves members and welcomes new people." },
         { id: "urgency_member_voice", label: "Member priorities should help guide MOWA’s activities and outreach." }
-      ],
+      ]
+    },
+    {
+      id: "final-2",
+      section: "final",
+      part: "2 of 3",
+      title: "Priorities",
+      intro: "Please identify the most important steps for attracting and serving members.",
       fields: [
         { id: "single_most_important_new_members", type: "textarea", rows: 2, label: "What is the single most important thing MOWA should do to attract new members?" },
         { id: "single_most_important_existing_members", type: "textarea", rows: 2, label: "What is the single most important thing MOWA should do to better serve existing members?" }
       ]
     },
     {
-      id: "final-2",
+      id: "final-3",
       section: "final",
-      part: "2 of 2",
+      part: "3 of 3",
       title: "Looking ahead",
       intro: "Use these final questions to describe what success would look like.",
       fields: [

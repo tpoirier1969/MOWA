@@ -9,33 +9,22 @@
 </head>
 <body class="survey-app">
   <header class="app-header">
-    <a class="brand" href="#" id="homeLink" aria-label="Return to the first page">
+    <button class="brand-button" type="button" id="homeLink" aria-label="Return to the first page">
       <img src="assets/mowa-logo.webp" alt="Michigan Outdoor Writers Association" />
-    </a>
-    <div class="header-meta">
-      <span id="saveStatus">Answers save in this browser</span>
-      <button type="button" class="text-button" id="saveDraft">Save</button>
-      <button type="button" class="text-button" id="exportDraft">Export</button>
+    </button>
+    <div class="autosave-status" id="saveStatus" aria-live="polite">
+      Your answers are automatically saved on this computer.
     </div>
   </header>
 
-  <main class="app-main" aria-live="polite">
+  <main class="app-main">
     <div class="section-progress" id="sectionProgress" hidden>
       <div class="section-tabs" id="sectionTabs" aria-label="Questionnaire sections"></div>
       <div class="progress-line" aria-hidden="true"><span id="progressBar"></span></div>
     </div>
 
-    <div class="screen-host" id="screenHost"></div>
+    <div class="screen-host" id="screenHost" aria-live="polite"></div>
   </main>
-
-  <footer class="app-footer">
-    <div class="footer-left">
-      <span id="pageCount">Page 1</span>
-      <span class="footer-divider" aria-hidden="true">•</span>
-      <span id="progressText">Introduction</span>
-    </div>
-    <div class="footer-actions" id="footerActions"></div>
-  </footer>
 
   <dialog id="messageDialog" class="message-dialog">
     <div id="dialogContent"></div>

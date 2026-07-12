@@ -1,11 +1,10 @@
-// Copy this file and edit the values after you create the Supabase table.
-// Leave values blank to use local-only mode. Local-only mode still lets you export JSON/CSV.
+// Add the URL and anonymous key from the Supabase project chosen for this survey.
+// This site uses only the namespaced table below and does not touch other project tables.
 window.MOWA_SURVEY_CONFIG = {
-  surveyVersion: "mowa-direction-survey-v4",
+  surveyVersion: "mowa-direction-survey-v5",
   supabaseUrl: "",
   supabaseAnonKey: "",
   tableName: "mowa_direction_survey_responses",
-  allowLocalFallback: true,
   officialSiteUrl: "https://miowa.net/",
-  bylawsUrl: "https://miowa.net/about-us/"
+  bylawsOrPrinciplesUrl: "https://miowa.net/about-us/"
 };

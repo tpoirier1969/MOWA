@@ -3,22 +3,34 @@
 ## GitHub
 
 - [ ] Create or deliberately select the correct repository.
-- [ ] Confirm this is not being placed into another project by accident.
+- [ ] Confirm this package is not being placed into another project by accident.
 - [ ] Upload the package contents to the repository root or an approved `/docs` folder.
-- [ ] Enable GitHub Pages.
-- [ ] Confirm the landing page, slide transitions, section navigation, and Back/Next controls work.
-- [ ] Confirm no questionnaire screen scrolls at the target desktop/laptop sizes.
-- [ ] Confirm `results.html` opens.
+- [ ] Enable GitHub Pages from the intended branch and folder.
+- [ ] Confirm the logo and hero image load from the local `assets` folder.
+- [ ] Confirm the page visibly slides left when moving forward and right when moving backward.
+- [ ] Confirm Back and Next buttons appear centered beneath the page content.
+- [ ] Confirm the section strip wraps and never scrolls sideways.
+- [ ] Confirm no questionnaire page scrolls at the target monitor sizes.
 
 ## Supabase
 
 - [ ] Deliberately select the correct Supabase project.
-- [ ] Review `supabase/schema.sql`.
+- [ ] Review `supabase/schema.sql` before running it.
 - [ ] Run the SQL successfully.
-- [ ] Add the project URL and anon key to `js/config.js`.
+- [ ] Add only that project’s URL and anonymous key to `js/config.js`.
 - [ ] Confirm a test response inserts into `mowa_direction_survey_responses`.
-- [ ] Confirm optional contact fields are stored only when supplied.
+- [ ] Confirm no other tables are changed.
+- [ ] Confirm optional contact information is stored only when supplied.
 - [ ] Keep public SELECT disabled.
+- [ ] Confirm a failed submission leaves the draft saved in the browser.
+
+## Browser behavior
+
+- [ ] Begin a questionnaire, answer several questions, close the browser tab, and return through the same browser.
+- [ ] Confirm the first page offers to continue the saved questionnaire.
+- [ ] Confirm “Start over” clears only this questionnaire’s local draft.
+- [ ] Confirm a successful submission clears the local draft.
+- [ ] Test at 1366×768, 1280×720, and a narrower browser window.
 
 ## Content approval
 
@@ -26,13 +38,12 @@
 - [ ] Approve the multigenerational hero image.
 - [ ] Approve the introduction and questionnaire wording.
 - [ ] Obtain or approve the best available bylaws link.
-- [ ] Approve the anonymity and optional-contact statement.
-- [ ] Decide whether demographic questions remain included and optional.
+- [ ] Approve the automatic-save and optional-contact wording.
+- [ ] Decide whether optional age and gender questions remain included.
 - [ ] Decide the launch and closing dates.
 
-## Data analysis
+## Data review
 
-- [ ] Test the private Supabase export query.
-- [ ] Confirm exported JSON loads in `results.html`.
-- [ ] Confirm the summary CSV downloads.
-- [ ] Agree in advance how aggregated results and written comments will be shared.
+- [ ] Test a private Supabase export query.
+- [ ] Confirm exported response data works with the private `results.html` analyzer if that tool will be used.
+- [ ] Agree in advance how aggregated scores and written comments will be shared.
