@@ -94,7 +94,8 @@ window.MOWA_QUESTIONNAIRE = {
         { id: "expectations_met", label: "MOWA has met the expectations I had when I joined, or when I first became interested." },
         { id: "expected_connections", label: "MOWA has helped me feel connected to other outdoor communicators." },
         { id: "expected_growth", label: "MOWA has helped me grow professionally, creatively, or personally." },
-        { id: "expected_useful_activities", label: "MOWA has offered activities or opportunities that matter to me." },
+        { id: "expected_enjoyable_activities", label: "MOWA has offered enjoyable activities and gatherings that help members connect, learn from one another, and spend time together." },
+        { id: "expected_learning_opportunities", label: "MOWA has offered useful learning and skill-building opportunities, such as workshops, demonstrations, how-to videos, or other practical instruction." },
         { id: "expected_more_needed", label: "There are additional things I would like MOWA to offer or do." }
       ]
     },

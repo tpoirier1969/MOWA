@@ -29,7 +29,7 @@
   ];
 
   const discussionGroups = [
-    { area: 'Member expectations', fields: 'expectations_met, expected_connections, expected_growth, expected_useful_activities, expected_more_needed, member_value' },
+    { area: 'Member expectations', fields: 'expectations_met, expected_connections, expected_growth, expected_enjoyable_activities, expected_learning_opportunities, expected_more_needed, member_value' },
     { area: 'Mission and member value', fields: 'imp_writers, imp_multimedia, imp_craft, imp_opportunities, imp_networking, imp_mentoring, imp_students, imp_women_broader, imp_conservation, imp_heritage' },
     { area: 'Delivery and experience', fields: 'perf_writers, perf_multimedia, perf_craft, perf_opportunities, perf_networking, perf_mentoring, perf_students, perf_women_broader, perf_conservation, member_value' },
     { area: 'Activities and communication', fields: 'conference_effectiveness, membership_clarity, welcome_new_people, communication_effectiveness, website_effectiveness' },

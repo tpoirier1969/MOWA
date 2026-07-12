@@ -150,6 +150,8 @@ a:hover { color: var(--forest); }
 .screen-inner {
   width: min(100%, 1040px);
   min-width: 0;
+  height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -442,12 +444,15 @@ select:focus, textarea:focus, input[type="text"]:focus, input[type="email"]:focu
 .award-list strong { color: var(--forest); }
 
 .screen-nav {
+  flex: 0 0 auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin-top: clamp(14px, 2.2vh, 24px);
+  min-height: 54px;
+  margin-top: auto;
+  padding-top: 14px;
 }
 .button {
   appearance: none;
@@ -506,7 +511,7 @@ select:focus, textarea:focus, input[type="text"]:focus, input[type="email"]:focu
   .rating-options { margin-top: 5px; }
   .field { padding: 8px 0; }
   textarea { min-height: 58px; max-height: 76px; }
-  .screen-nav { margin-top: 11px; }
+  .screen-nav { min-height: 48px; padding-top: 9px; }
   .how-item { padding: 9px 0; }
   .award-panel { padding-top: 9px; padding-bottom: 9px; }
 }
@@ -526,7 +531,7 @@ select:focus, textarea:focus, input[type="text"]:focus, input[type="email"]:focu
   .score-choice { flex-direction: column; align-items: center; text-align: center; gap: 2px; font-size: .62rem; }
   .score-choice input { width: 15px; height: 15px; }
   .score-choice strong { font-size: .76rem; }
-  .screen-nav { margin-top: 8px; }
+  .screen-nav { min-height: 46px; padding-top: 7px; }
   .button { padding: 8px 13px; font-size: .84rem; }
 }
 

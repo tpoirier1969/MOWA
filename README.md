@@ -64,7 +64,7 @@ This package does not assume it owns your GitHub or Supabase account.
 
 ```js
 window.MOWA_SURVEY_CONFIG = {
-  surveyVersion: "mowa-direction-survey-v5",
+  surveyVersion: "mowa-direction-survey-v5.2",
   supabaseUrl: "https://YOUR-PROJECT.supabase.co",
   supabaseAnonKey: "YOUR_ANON_PUBLIC_KEY",
   tableName: "mowa_direction_survey_responses",
@@ -103,3 +103,9 @@ The layout uses the available width but remains single-column. Browser zoom, unu
 5. Submit several test responses and confirm they appear only in `mowa_direction_survey_responses`.
 6. Test closing and reopening the questionnaire to confirm same-computer draft recovery.
 7. Delete test rows before launch.
+
+## Revision 5.2 notes
+
+- Separates social/member activities from learning and skill-building opportunities in the member-experience questions.
+- Keeps Back and Next controls in a consistent centered position beneath the main content on every screen.
+

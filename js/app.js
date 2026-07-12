@@ -13,8 +13,8 @@
   const dialogContent = document.getElementById('dialogContent');
   const closeDialog = document.getElementById('closeDialog');
 
-  const draftKey = 'mowa_direction_survey_draft_v5';
-  const legacyKeys = ['mowa_direction_survey_draft_v4', 'mowa_direction_survey_draft_v3'];
+  const draftKey = 'mowa_direction_survey_draft_v5_2';
+  const legacyKeys = ['mowa_direction_survey_draft_v5', 'mowa_direction_survey_draft_v4', 'mowa_direction_survey_draft_v3'];
   const allScreens = [
     ...data.introScreens.map((screen) => ({ ...screen, screenType: 'intro' })),
     ...data.pages.map((page) => ({ ...page, screenType: 'survey' }))
@@ -54,7 +54,7 @@
         answers,
         pageIndex: currentIndex >= firstSurveyIndex ? currentIndex : lastSurveyIndex,
         updatedAt: new Date().toISOString(),
-        surveyVersion: config.surveyVersion || 'mowa-direction-survey-v5'
+        surveyVersion: config.surveyVersion || 'mowa-direction-survey-v5.2'
       };
       try {
         localStorage.setItem(draftKey, JSON.stringify(payload));
@@ -464,7 +464,7 @@
     );
     const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
     const row = {
-      survey_version: config.surveyVersion || 'mowa-direction-survey-v5',
+      survey_version: config.surveyVersion || 'mowa-direction-survey-v5.2',
       respondent_type: answers.role || null,
       member_duration: answers.mowa_years || null,
       creator_types: Array.isArray(answers.creator_types) ? answers.creator_types : [],
