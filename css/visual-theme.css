@@ -41,6 +41,20 @@ a,
   color: var(--logo-green);
 }
 
+/* Keep ordinary links readable on the tan page background. */
+.source-links a,
+.source-links a:visited {
+  color: var(--logo-green-dark);
+  font-weight: 800;
+  text-decoration-color: var(--trout-orange);
+  text-decoration-thickness: 2px;
+}
+
+.source-links a:hover,
+.source-links a:focus-visible {
+  color: #6a341b;
+}
+
 /* Dark green top bar with the logo centered inside a deliberately inset tan window. */
 .app-header {
   display: grid;
@@ -55,16 +69,32 @@ a,
   box-shadow: 0 7px 20px rgba(24, 35, 20, .22);
 }
 
-.bylaws-link {
+/* High-contrast control so the bylaws link stays readable on any screen. */
+.bylaws-link,
+.bylaws-link:visited {
   grid-column: 1;
   justify-self: start;
-  color: var(--paper-light);
-  border-bottom-color: var(--trout-orange);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border: 1px solid var(--trout-orange);
+  border-bottom-width: 2px;
+  border-radius: 7px;
+  background: #f3e6c9;
+  color: var(--logo-green-dark);
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .18);
 }
 
-.bylaws-link:hover {
-  color: #fff0cf;
-  border-bottom-color: var(--trout-gold);
+.bylaws-link:hover,
+.bylaws-link:focus-visible {
+  color: #fffaf0;
+  background: #5b4724;
+  border-color: var(--trout-gold);
+  outline: none;
 }
 
 .brand-button {
@@ -181,8 +211,10 @@ a,
     max-height: 36px;
   }
 
-  .bylaws-link {
-    font-size: .70rem;
+  .bylaws-link,
+  .bylaws-link:visited {
+    padding: 5px 7px;
+    font-size: .68rem;
     white-space: nowrap;
   }
 
@@ -223,8 +255,10 @@ a,
     max-height: 33px;
   }
 
-  .bylaws-link {
-    font-size: .66rem;
+  .bylaws-link,
+  .bylaws-link:visited {
+    padding: 4px 6px;
+    font-size: .63rem;
   }
 
   .autosave-status {
