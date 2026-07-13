@@ -1,19 +1,19 @@
 /* Trout-inspired visual refinement
-   Uses the green sampled from the MOWA logo and brook-trout orange accents. */
+   Muted brook-trout greens with restrained orange and gold accents. */
 
 :root {
-  --logo-green: #0c7554;
-  --logo-green-dark: #07523c;
-  --logo-green-soft: #2d8066;
-  --trout-orange: #e36b2c;
-  --trout-gold: #e0a63a;
+  --logo-green: #46583b;
+  --logo-green-dark: #273823;
+  --logo-green-soft: #68775a;
+  --trout-orange: #d66a2c;
+  --trout-gold: #c99a3b;
   --forest: var(--logo-green);
   --forest-dark: var(--logo-green-dark);
   --lake: var(--logo-green-soft);
   --copper: var(--trout-orange);
   --gold: var(--trout-gold);
-  --ink: var(--logo-green-dark);
-  --muted: #356b58;
+  --ink: #34442f;
+  --muted: #596652;
 }
 
 body,
@@ -28,7 +28,7 @@ body,
 .award-list,
 .resume-notice,
 .thank-you p {
-  color: var(--logo-green-dark);
+  color: var(--ink);
 }
 
 h1,
@@ -41,16 +41,30 @@ a,
   color: var(--logo-green);
 }
 
-/* Dark green top bar with a centered tan logo window. */
+/* Dark green top bar with the logo centered inside a deliberately inset tan window. */
 .app-header {
   display: grid;
-  grid-template-columns: minmax(210px, 1fr) auto minmax(210px, 1fr);
+  grid-template-columns: minmax(120px, 1fr) auto minmax(120px, 1fr);
   align-items: center;
-  gap: 18px;
+  gap: 16px;
+  min-height: var(--header-height);
+  padding: 6px clamp(16px, 3vw, 42px);
   background: var(--logo-green-dark);
   border-top-color: var(--trout-orange);
-  border-bottom-color: rgba(255, 250, 240, .36);
-  box-shadow: 0 7px 20px rgba(4, 47, 34, .20);
+  border-bottom-color: rgba(255, 250, 240, .30);
+  box-shadow: 0 7px 20px rgba(24, 35, 20, .22);
+}
+
+.bylaws-link {
+  grid-column: 1;
+  justify-self: start;
+  color: var(--paper-light);
+  border-bottom-color: var(--trout-orange);
+}
+
+.bylaws-link:hover {
+  color: #fff0cf;
+  border-bottom-color: var(--trout-gold);
 }
 
 .brand-button {
@@ -59,37 +73,35 @@ a,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 260px;
-  padding: 6px 18px;
-  border: 2px solid rgba(227, 107, 44, .72);
-  border-radius: 12px;
+  width: 218px;
+  height: 48px;
+  min-width: 0;
+  padding: 3px 10px;
+  border: 1px solid rgba(214, 106, 44, .66);
+  border-radius: 9px;
   background: var(--paper);
-  box-shadow: 0 3px 0 rgba(224, 166, 58, .70), 0 8px 18px rgba(0, 0, 0, .18);
+  box-shadow: 0 2px 0 rgba(201, 154, 59, .60), 0 5px 12px rgba(0, 0, 0, .16);
+  overflow: hidden;
 }
 
 .brand-button img {
-  width: min(230px, 38vw);
-  max-height: 47px;
+  display: block;
+  width: 190px;
+  max-width: 100%;
+  max-height: 40px;
+  object-fit: contain;
   object-position: center;
 }
 
-.header-actions {
+.autosave-status {
   grid-column: 3;
   justify-self: end;
-}
-
-.bylaws-link,
-.autosave-status {
+  max-width: 230px;
   color: var(--paper-light);
 }
 
-.bylaws-link {
-  border-bottom-color: var(--trout-orange);
-}
-
-.bylaws-link:hover {
-  color: #fff0c8;
-  border-bottom-color: var(--trout-gold);
+.header-actions {
+  display: contents;
 }
 
 /* Dark green navigation bar at the bottom of each screen. */
@@ -99,7 +111,7 @@ a,
   border-top: 0;
   border-radius: 10px 10px 0 0;
   background: var(--logo-green-dark);
-  box-shadow: 0 -5px 18px rgba(4, 47, 34, .12);
+  box-shadow: 0 -5px 18px rgba(24, 35, 20, .14);
 }
 
 .screen-nav .button.primary {
@@ -148,79 +160,75 @@ a,
 
 @media (max-width: 760px) {
   :root {
-    --header-height: 92px;
+    --header-height: 68px;
   }
 
   .app-header {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    justify-items: center;
-    gap: 3px;
-    padding: 5px 10px 7px;
+    grid-template-columns: minmax(64px, 1fr) auto minmax(82px, 1fr);
+    gap: 8px;
+    padding: 5px 9px;
   }
 
   .brand-button {
-    grid-column: 1;
-    grid-row: 1;
-    min-width: 0;
-    width: min(216px, 62vw);
-    padding: 4px 12px;
-    border-radius: 10px;
+    width: 150px;
+    height: 44px;
+    padding: 3px 8px;
+    border-radius: 8px;
   }
 
   .brand-button img {
-    width: min(188px, 54vw);
-    max-height: 39px;
-  }
-
-  .header-actions {
-    grid-column: 1;
-    grid-row: 2;
-    justify-self: stretch;
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    width: 100%;
+    width: 134px;
+    max-height: 36px;
   }
 
   .bylaws-link {
-    font-size: .72rem;
+    font-size: .70rem;
+    white-space: nowrap;
   }
 
   .autosave-status {
-    max-width: 54vw;
-    font-size: .61rem;
-    line-height: 1.15;
-    text-align: center;
+    max-width: 104px;
+    font-size: .57rem;
+    line-height: 1.12;
+    text-align: right;
   }
 
   .screen-nav {
     background: var(--logo-green-dark);
     border-top: 2px solid var(--trout-orange);
     border-radius: 0;
-    box-shadow: 0 -10px 28px rgba(4, 47, 34, .28);
+    box-shadow: 0 -10px 28px rgba(24, 35, 20, .28);
   }
 }
 
 @media (max-width: 390px) {
   :root {
-    --header-height: 88px;
+    --header-height: 64px;
+  }
+
+  .app-header {
+    grid-template-columns: minmax(58px, 1fr) auto minmax(72px, 1fr);
+    gap: 6px;
+    padding-left: 7px;
+    padding-right: 7px;
   }
 
   .brand-button {
-    width: min(202px, 64vw);
+    width: 138px;
+    height: 41px;
   }
 
   .brand-button img {
-    width: min(176px, 56vw);
+    width: 122px;
+    max-height: 33px;
   }
 
-  .header-actions {
-    gap: 13px;
+  .bylaws-link {
+    font-size: .66rem;
   }
 
   .autosave-status {
-    max-width: 56vw;
-    font-size: .57rem;
+    max-width: 90px;
+    font-size: .53rem;
   }
 }
